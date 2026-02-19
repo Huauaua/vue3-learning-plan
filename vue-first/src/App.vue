@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import Counter from "./components/Counter.vue";
 import HelloWorld from './components/HelloWorld.vue'
 </script>
 
@@ -9,7 +10,7 @@ import HelloWorld from './components/HelloWorld.vue'
       <HelloWorld msg="你已成功" />
     </div>
   </header>
-
+  <Counter>啊实打实大苏打实打实</Counter>
 </template>
 
 <style scoped>
