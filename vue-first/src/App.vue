@@ -2,6 +2,8 @@
 import { RouterLink, RouterView } from 'vue-router'
 import Counter from "./components/Counter.vue";
 import HelloWorld from './components/HelloWorld.vue'
+import Mylink from "@/components/Mylink.vue";
+import ComputeAmount from "./components/ComputeAmount.vue";
 </script>
 
 <template>
@@ -11,6 +13,8 @@ import HelloWorld from './components/HelloWorld.vue'
     </div>
   </header>
   <Counter>啊实打实大苏打实打实</Counter>
+  <Mylink/>
+  <ComputeAmount />
 </template>
 
 <style scoped>
