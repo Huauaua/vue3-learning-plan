@@ -1,22 +1,26 @@
 <template>
-  <div class="counter">
-    <h2>计数器示例</h2>
-    <p>当前计数: {{ count }}</p>
+  <div class="greetings" style="border: 1px solid #42b983; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: end;min-height: 300px">
+    <div class="counter" v-show="showCt">
+      <h2>计数器示例</h2>
+      <p>当前计数: {{ count }}</p>
 
-    <div class="buttons">
-      <button
-          @mousedown="startIncrement"
-          @mouseup="stopIncrement"
-      >
-        增加
-      </button>
-      <button @click="decrement">减少</button>
-      <button @click="reset" @mouseover="reset">重置</button>
-    </div>
+      <div class="buttons">
+        <button
+            @mousedown="startIncrement"
+            @mouseup="stopIncrement"
+            @mouseleave="stopIncrement"
+        >
+          增加
+        </button>
+        <button @click="decrement">减少</button>
+        <button @click="reset" @mouseover="reset">重置</button>
+      </div>
 
-    <div v-if="count > 10" class="warning">
-      计数已经超过10了！
+      <div v-if="count > 10" class="warning">
+        计数已经超过10了！
+      </div>
     </div>
+    <button @click="showCt = !showCt" style="width: 100px; height: 50px;margin-bottom: 10px;">计数器: 显示/隐藏</button>
   </div>
 </template>
 
@@ -25,6 +29,7 @@ import { ref } from 'vue'
 
 // 定义响应式数据
 const count = ref(0)
+const showCt = ref(true)
 let timer = null
 let longPressTimer = null
 
