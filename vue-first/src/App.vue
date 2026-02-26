@@ -4,6 +4,7 @@ import Counter from "./components/Counter.vue";
 import HelloWorld from './components/HelloWorld.vue'
 import Mylink from "@/components/Mylink.vue";
 import ComputeAmount from "./components/ComputeAmount.vue";
+import MyString from "@/components/String.vue";
 </script>
 
 <template>
@@ -15,6 +16,8 @@ import ComputeAmount from "./components/ComputeAmount.vue";
   <Counter>啊实打实大苏打实打实</Counter>
   <Mylink/>
   <ComputeAmount />
+  <MyString message="prop验证">String组件A</MyString>
+  <MyString message=1+1>String组件A</MyString>
 </template>
 
 <style scoped>
