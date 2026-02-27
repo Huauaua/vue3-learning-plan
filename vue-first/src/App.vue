@@ -23,12 +23,14 @@ import { router } from "./router";
       <!-- Prop验证示例 -->
       <MyString message="prop验证">String组件A</MyString>
       <MyString :message="1 + 1">String组件B</MyString>
-      <router-link to="/about">Go to About</router-link>
-      <router-link to="/counter">Go to Counter</router-link>
     </main>
     
     <!-- 路由视图 -->
-    <router-view style="width: 500px; height: 350px; margin: 0 auto; border: 1px solid #ccc; padding: 10px; border-radius: 5px;"></router-view>
+    <div style="width: 500px; height: auto; margin-bottom:100px; border: 1px solid #ccc; padding: 10px; border-radius: 5px;">
+      <router-link to="/about">Go to About</router-link>
+      <router-link to="/counter">Go to Counter</router-link>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
