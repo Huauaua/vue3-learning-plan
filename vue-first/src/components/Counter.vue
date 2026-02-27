@@ -75,8 +75,8 @@ const reset = () => {
 
 <style scoped>
 .counter {
-  max-width: 500px;
-  min-width: 400px;
+  //max-width: 500px;
+  //min-width: 400px;
   margin: 20px auto;
   padding: 20px;
   border: 2px solid #42b983;
