@@ -1,0 +1,463 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>素笺 · 三色记事本</title>
+  <style>
+    /* 全局重置 + 三种颜色定义
+       主色: 暖白背景 #faf7f2
+       辅色: 柔和木质 #d9ccc1
+       强调: 深灰文字 #3e3a36
+    */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #faf7f2;           /* 主色1：暖白 */
+      color: #3e3a36;                       /* 主色2：深灰褐 (文字/线条) */
+      font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      line-height: 1.6;
+    }
+
+    /* 整个卡片也保持三色，辅色用于装饰边界 */
+    .notebook {
+      background-color: #faf7f2;
+      width: 100%;
+      max-width: 880px;
+      height: auto;
+      border-radius: 32px 32px 28px 28px;
+      box-shadow: 0 20px 35px -10px rgba(60, 50, 40, 0.15),
+      0 2px 0 0 #d9ccc1 inset,                 /* 辅色上缘细线 */
+      0 -2px 0 0 #d9ccc1 inset;                /* 辅色下缘细线 */
+      padding: 2rem 2rem 2.2rem 2rem;
+      border: 1px solid #d9ccc1;                           /* 辅色边框 */
+      transition: box-shadow 0.2s;
+    }
+
+    /* 顶栏 — 只使用主色+辅色装饰 */
+    .notebook-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.8rem;
+      flex-wrap: wrap;
+      gap: 0.8rem 1rem;
+      border-bottom: 2px dashed #d9ccc1;                   /* 辅色虚线 */
+      padding-bottom: 0.75rem;
+    }
+
+    .title-section {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .title-section h1 {
+      font-size: 1.9rem;
+      font-weight: 420;
+      letter-spacing: 1px;
+      color: #3e3a36;
+      line-height: 1.2;
+      position: relative;
+    }
+
+    /* 一个极简的「记事本」符号，完全用主色和辅色 */
+    .title-section h1::before {
+      content: '✎';
+      font-size: 2.2rem;
+      margin-right: 8px;
+      font-weight: 300;
+      color: #d9ccc1;                                       /* 辅色铅笔符号 */
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+
+    /* 纸页计数 — 用辅色做小标签 */
+    .page-meta {
+      background-color: #d9ccc1;                            /* 辅色块 */
+      color: #3e3a36;
+      font-size: 0.9rem;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      font-weight: 450;
+      border: 1px solid transparent;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+    }
+
+    /* 工具条：只用主色背景 + 辅色边框 */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      background-color: #faf7f2;
+      padding: 0.8rem 0.2rem;
+      border-bottom: 1px solid #d9ccc1;
+      border-top: 1px solid #d9ccc1;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tool-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    /* 所有按钮只用深灰文字 + 辅色边框/背景 (没有额外颜色) */
+    .note-btn {
+      background: #faf7f2;
+      border: 1px solid #d9ccc1;
+      color: #3e3a36;
+      font-size: 0.95rem;
+      padding: 0.45rem 1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.1s ease;
+      font-weight: 480;
+      box-shadow: 0 2px 2px rgba(0,0,0,0.02);
+    }
+
+    .note-btn:hover {
+      background-color: #d9ccc1;           /* 辅色悬停 */
+      border-color: #b7aaa0;
+      color: #2b2825;
+    }
+
+    .note-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* 统计字数同样只使用三色 */
+    .word-count {
+      font-size: 0.9rem;
+      background: #faf7f2;
+      padding: 0.45rem 1.1rem;
+      border-radius: 50px;
+      border: 1px solid #d9ccc1;
+      color: #3e3a36;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .word-count span {
+      font-weight: 600;
+      background: #d9ccc1;                  /* 辅色数字底 */
+      padding: 2px 10px;
+      border-radius: 40px;
+      margin-left: 4px;
+      color: #3e3a36;
+    }
+
+    /* 核心：编辑区 — 完全白纸感，但依然在主色+辅色限制内 */
+    .editor-pane {
+      background-color: #faf7f2;
+      border: 1px solid #d9ccc1;
+      border-radius: 24px;
+      padding: 1.2rem 1.6rem;
+      margin-top: 0.5rem;
+      box-shadow: inset 0 4px 8px rgba(130, 110, 90, 0.04);
+    }
+
+    /* 可编辑区域 */
+    .notepad-content {
+      min-height: 320px;
+      max-height: 65vh;
+      overflow-y: auto;
+      outline: none;
+      line-height: 1.8;
+      font-size: 1.1rem;
+      color: #3e3a36;
+      caret-color: #3e3a36;                 /* 光标深灰 */
+      word-break: break-word;
+      white-space: pre-wrap;
+      background: #faf7f2;
+      padding: 0.4rem 0.2rem;
+      scrollbar-width: thin;
+      scrollbar-color: #d9ccc1 #faf7f2;
+    }
+
+    .notepad-content::-webkit-scrollbar {
+      width: 8px;
+    }
+    .notepad-content::-webkit-scrollbar-track {
+      background: #faf7f2;
+    }
+    .notepad-content::-webkit-scrollbar-thumb {
+      background-color: #d9ccc1;
+      border-radius: 10px;
+      border: 2px solid #faf7f2;
+    }
+
+    /* 占位符样式 (用data属性和CSS模拟) */
+    .notepad-content:empty::before {
+      content: attr(data-placeholder);
+      color: #b7aaa0;                        /* 比辅色深一点，依然在色盘内 */
+      font-style: italic;
+      font-weight: 300;
+      pointer-events: none;
+    }
+
+    /* 底部状态栏 只用辅色上边线 */
+    .notebook-footer {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #3e3a36;
+      font-size: 0.9rem;
+      border-top: 1px solid #d9ccc1;
+      padding-top: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .footer-date {
+      background: #faf7f2;
+      padding: 0.2rem 0.5rem;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .footer-date span {
+      background-color: #d9ccc1;
+      padding: 0.2rem 1rem;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .footer-save-state {
+      opacity: 0.8;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* 三个装饰小点 —— 只用来呼应三色，无功能 */
+    .dot-decoration {
+      display: flex;
+      gap: 0.4rem;
+      margin-left: 0.2rem;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      background-color: #d9ccc1;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* 完全无登录, 没有任何用户相关字段 */
+  </style>
+</head>
+<body>
+<div class="notebook">
+  <!-- 头部: 只有三种颜色 -->
+  <div class="notebook-header">
+    <div class="title-section">
+      <h1>素笺</h1>
+      <div class="dot-decoration">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+    <div class="page-meta">
+      📔 日常手帖 · 即兴页
+    </div>
+  </div>
+
+  <!-- 工具栏: 无登录，纯功能 -->
+  <div class="toolbar">
+    <div class="tool-group">
+      <button class="note-btn" id="boldBtn" title="粗体 (Ctrl+B)">
+        <b>B</b>
+      </button>
+      <button class="note-btn" id="italicBtn" title="斜体 (Ctrl+I)">
+        <i>I</i>
+      </button>
+      <button class="note-btn" id="clearFormatBtn" title="清除格式">
+        <span>↺</span> 格式
+      </button>
+      <button class="note-btn" id="resetBtn" title="新建空白页">
+        ✦ 新页
+      </button>
+    </div>
+    <div class="word-count">
+      📝 字数 <span id="wordCount">0</span>
+    </div>
+  </div>
+
+  <!-- 编辑器主体: 可编辑区域 (contenteditable) -->
+  <div class="editor-pane">
+    <div
+        id="editableArea"
+        class="notepad-content"
+        contenteditable="true"
+        data-placeholder="在这里写点东西…… 轻快、自由、无拘束"
+        spellcheck="false"
+    ></div>
+  </div>
+
+  <!-- 底部: 只有三色装饰与日期 (无用户信息) -->
+  <div class="notebook-footer">
+    <div class="footer-date">
+      <span>今日</span>
+      <span id="dateDisplay"></span>
+    </div>
+    <div class="footer-save-state">
+      <span style="color:#b7aaa0;">✎ 落笔无声 · 仅此一页</span>
+      <span class="dot"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // --- 三色记事本交互 ---
+    // 获取元素
+    const editor = document.getElementById('editableArea');
+    const wordCountSpan = document.getElementById('wordCount');
+    const boldBtn = document.getElementById('boldBtn');
+    const italicBtn = document.getElementById('italicBtn');
+    const clearBtn = document.getElementById('clearFormatBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const dateDisplay = document.getElementById('dateDisplay');
+
+    // --- 初始化日期 (简单格式化, 仅用于装饰) ---
+    function updateDate() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = (now.getMonth() + 1).toString().padStart(2,'0');
+      const day = now.getDate().toString().padStart(2,'0');
+      const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+      const weekday = weekdays[now.getDay()];
+      dateDisplay.textContent = `${year}.${month}.${day} ${weekday}`;
+    }
+    updateDate();
+
+    // --- 字数统计 (只统计纯文本，不包含html标签) ---
+    function countWords() {
+      let text = editor.innerText || editor.textContent || '';
+      // 去除多余空白，统计中文字符+单词 (按常规统计，连续字母算一个词)
+      // 简单实用: 去除前后空格，然后按空白分割，过滤空串，再计算中文字符单独计数
+      // 但为了直观，采用更符合直觉的方式： 中文字符每个算一字，英文单词按空格分开算
+      const trimmed = text.trim();
+      if (trimmed === '') {
+        wordCountSpan.textContent = '0';
+        return;
+      }
+      // 匹配中文字符 (至少一个) + 匹配非中文字词(连续非空白)
+      // 简单处理: 将全角/半角空格分开, 统计连续非空白段个数 (适用于中英混合，但中文没有空格会整个算一个，需要细化)
+      // 更准确的: 将中文每个字符视为一个字，英文单词按空格分词。
+      // 这里采用常用简单方法: 统计所有非空白字符序列 (中文会每个字都分开吗？不会，如果中文无空格会作为一个块)
+      // 因此需要优化: 使用正则分别处理
+      let chineseChars = (trimmed.match(/[\u4e00-\u9fa5]/g) || []).length;  // 中文字符个数
+      // 英文单词: 将连续字母/数字/符号但非中文的按空白切分，但保留包含连字符的单词
+      // 先移除中文, 避免干扰
+      const withoutChinese = trimmed.replace(/[\u4e00-\u9fa5]/g, ' ');
+      const words = withoutChinese.split(/\s+/).filter(w => w.trim().length > 0);
+      const englishWordCount = words.length;
+      const total = chineseChars + englishWordCount;
+      wordCountSpan.textContent = total;
+    }
+
+    // 监听输入事件更新字数
+    editor.addEventListener('input', countWords);
+    // 也监听blur以防万一
+    editor.addEventListener('blur', countWords);
+
+    // 执行一次初始化字数 (可能带默认空值)
+    countWords();
+
+    // --- 文档编辑命令 (粗体/斜体) ---
+    boldBtn.addEventListener('click', function() {
+      document.execCommand('bold', false, null);
+      editor.focus();  // 保持焦点
+    });
+
+    italicBtn.addEventListener('click', function() {
+      document.execCommand('italic', false, null);
+      editor.focus();
+    });
+
+    // 清除格式 (仅清除内联样式、标签，保留文字)
+    clearBtn.addEventListener('click', function() {
+      // 简单方法: 用execCommand removeFormat
+      document.execCommand('removeFormat', false, null);
+      // 额外去掉可能的加粗/斜体标签 (但removeFormat通常足够)
+      editor.focus();
+    });
+
+    // 重置编辑器内容 (新页)
+    resetBtn.addEventListener('click', function() {
+      if (editor.innerHTML !== '' && !confirm('新建空白页会丢弃当前内容，确定吗？')) {
+        return;
+      }
+      editor.innerHTML = '';          // 清空
+      countWords();                    // 更新字数为0
+      editor.focus();
+    });
+
+    // 添加键盘快捷键 Ctrl+B / Ctrl+I (同时保留默认行为)
+    editor.addEventListener('keydown', function(e) {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === 'b' || e.key === 'B') {
+          e.preventDefault();  // 防止浏览器打开收藏等
+          document.execCommand('bold', false, null);
+        } else if (e.key === 'i' || e.key === 'I') {
+          e.preventDefault();
+          document.execCommand('italic', false, null);
+        }
+      }
+    });
+
+    // 为防止编辑器失焦时统计延迟, 增加一个周期性刷新 (可选)
+    // 但input足以, 另外在点击重置等之后手动调用
+    resetBtn.addEventListener('click', function() {
+      // 清空已经发生, 但countWords会在input里触发, 但手动触发确保
+      setTimeout(countWords, 10);
+    });
+
+    // 可选: 若在编辑器内通过浏览器拼写、拖拽等，输入事件都会触发
+
+    // 确保页面加载后编辑器有占位符效果 (data-placeholder)
+    // 并且禁止自动聚焦，避免键盘弹出 (但无伤大雅)
+    // 若希望打开即用但又不自动弹出键盘，可保留原样。点开即用: 用户点击即可编辑。
+
+    // 简单加一个小优化: 点击新页后确保计数
+    // 另外设置内容时若粘贴纯文本，我们可以监听但保留html样式？不需要额外功能。
+
+    // 禁止默认的拖拽放置为纯文本? 不用，默认即可。
+
+    // 最后一个细节: 防止 Enter 产生 div 或换行不一致, 但保留浏览器默认，常用p或div均可。
+    // 使用 contenteditable 默认换行产生 <div> 或 <p> 因浏览器而异，但保持简单。
+
+    // 为了在重置时如果内容为空，显示占位符, data-placeholder 已经通过css处理
+    // 但css :empty 针对无子元素有效。如果内部有空标签 <div><br></div> 则不算空，
+    // 所以重置时直接 innerHTML = '' 使得完全为空，触发 :empty 伪类。
+  })();
+</script>
+
+</body>
+</html>
+<script setup lang="ts">
+</script>
