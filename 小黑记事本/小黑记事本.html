@@ -2,49 +2,276 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>软萌小本本 · 三色卡片</title>
+    <style>
+        /* 只使用三种配色： 奶油白 #fef9f2 · 蜜桃粉 #ffb7b2 · 可可棕 #5e4b3c */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+        }
+        body {
+            background: #ffb7b2;               /* 蜜桃粉背景（主色1） */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem;
+        }
+        #app {
+            max-width: 620px;
+            width: 100%;
+            background: #fef9f2;                /* 奶油白卡片（主色2） */
+            border-radius: 42px 42px 38px 38px;
+            padding: 2rem 1.8rem 1.8rem 1.8rem;
+            box-shadow: 0 20px 28px -8px rgba(94, 75, 60, 0.25),
+            0 6px 0 0 #ffe2dc inset,    /* 柔和内框 */
+            0 -6px 0 0 #ffe2dc inset;
+            border: 2px solid #ffe0d9;
+        }
+        /* header 区域 — 只用圆润排版 */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.6rem 0.8rem;
+            margin-bottom: 2.2rem;
+            background: #fef9f2;
+            border-radius: 60px;
+            padding: 0.5rem 0.5rem 0.5rem 1.8rem;
+            box-shadow: 0 4px 0 0 #ffd4cd;
+            border: 2px solid #ffb7b2;
+        }
+        .header h1 {
+            font-size: 1.9rem;
+            font-weight: 550;
+            color: #5e4b3c;                      /* 可可棕（主色3） */
+            letter-spacing: 1px;
+            margin-right: 0.2rem;
+            background: #fef9f2;
+            padding: 0 0.2rem;
+            text-shadow: 2px 2px 0 #ffd4cd;
+        }
+        .new-todo {
+            flex: 2 1 200px;
+            background: #fff9f5;
+            border-radius: 60px;
+            padding: 0.8rem 1.4rem;
+            font-size: 1rem;
+            color: #5e4b3c;
+            border: 2px solid #ffb7b2;
+            outline: none;
+            transition: 0.15s;
+        }
+        .new-todo:focus {
+            border-color: #5e4b3c;
+            background: #ffffff;
+        }
+        .new-todo::placeholder {
+            color: #dbb9ae;
+            font-weight: 300;
+        }
+        .add {
+            background: #fef9f2;
+            border: 3px solid #ffb7b2;
+            color: #5e4b3c;
+            font-size: 1.2rem;
+            font-weight: 600;
+            padding: 0.6rem 1.8rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 0 #f5a19b;
+            transition: 0.08s linear;
+            line-height: 1.2;
+        }
+        .add:hover {
+            background: #ffb7b2;
+            color: #fef9f2;
+            border-color: #faa29b;
+            box-shadow: 0 4px 0 0 #c07b74;
+        }
+        .add:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* 任务列表 — 纯粹卡片样式 */
+        .todo-list {
+            list-style: none;
+            margin: 1.5rem 0 1.2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+            max-height: 360px;
+            overflow-y: auto;
+            padding-right: 0.3rem;
+            scrollbar-width: thin;
+            scrollbar-color: #ffb7b2 #fef9f2;
+        }
+        .todo-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .todo-list::-webkit-scrollbar-track {
+            background: #ffeae5;
+            border-radius: 12px;
+        }
+        .todo-list::-webkit-scrollbar-thumb {
+            background: #ffb7b2;
+            border-radius: 12px;
+            border: 2px solid #fef9f2;
+        }
+        .todo {
+            background: #fff9f2;
+            border-radius: 50px 28px 28px 50px;
+            border: 2px solid #ffb7b2;
+            box-shadow: 0 5px 0 0 #f3bfb8;
+            transition: 0.1s;
+        }
+        .todo:hover {
+            transform: scale(1.01);
+            background: #ffffff;
+        }
+        .view {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.7rem 1rem 0.7rem 1.2rem;
+            flex-wrap: wrap;
+        }
+        .index {
+            color: #ffb7b2;
+            font-weight: 600;
+            font-size: 1.2rem;
+            min-width: 2rem;
+            text-shadow: 0 2px 0 #fadcd6;
+        }
+        .todo-label {
+            flex: 1 1 200px;
+            font-size: 1.2rem;
+            color: #5e4b3c;
+            font-weight: 480;
+            word-break: break-word;
+            padding: 0.1rem 0;
+        }
+        .del {
+            background: #fef9f2;
+            border: 2.5px solid #ffb7b2;
+            color: #5e4b3c;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 0 #efb2ab;
+            transition: 0.05s linear;
+        }
+        .del:hover {
+            background: #ffb7b2;
+            color: #3f332b;
+            border-color: #f7948d;
+        }
+        .del:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+
+        /* footer — 保持圆润三色 */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.8rem;
+            background: #ffeae5;
+            border-radius: 60px;
+            padding: 0.8rem 1.2rem 0.8rem 2rem;
+            border: 2px solid #ffb7b2;
+            box-shadow: 0 4px 0 0 #f3bfb8;
+        }
+        .todo-count {
+            color: #5e4b3c;
+            font-size: 1.2rem;
+            font-weight: 600;
+            background: #fef9f2;
+            padding: 0.3rem 1.4rem;
+            border-radius: 50px;
+            border: 2px solid #ffb7b2;
+            box-shadow: inset 0 -2px 0 #ffdad2;
+        }
+        .clear {
+            background: #fef9f2;
+            border: 3px solid #ffb7b2;
+            color: #5e4b3c;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 0.5rem 1.8rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 0 #efb2ab;
+            transition: 0.05s linear;
+        }
+        .clear:hover {
+            background: #ffb7b2;
+            color: #2f2721;
+        }
+        .clear:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+        /* 完全无新增按钮/功能，仅样式 */
+    </style>
 </head>
 <body>
-    <section id="app">
-        <header class="header">
-            <h1>小黑记事本</h1>
-            <input placeholder="请输入任务" class="new-todo">
-            <button class="add" @click="add">添加</button>
-        </header>
+<section id="app">
+    <header class="header">
+        <h1>小黑记事本</h1>
+        <label>
+            <input placeholder="请输入任务" class="new-todo" v-model="content">
+        </label>
+        <button class="add" @click="add">添加</button>
+    </header>
 
-        <ul class="todo-list">
-            <li class="todo" v-for="(item, index) in list" :key="item.id">
-                <div class="view">
-                    <span class="index">{{ index + 1 + "."}}</span>
-                    <label class="todo-label">{{ item.content }}</label>
-                    <button class="del" @click="del(item.id)">删除</button>
-                </div>
-            </li>
-        </ul>
-    </section>
+    <ul class="todo-list">
+        <li class="todo" v-for="(item, index) in list" :key="item.id">
+            <div class="view">
+                <span class="index">{{ index + 1 + "."}}</span>
+                <label class="todo-label">{{ item.content }}</label>
+                <button class="del" @click="del(item.id)">删除</button>
+            </div>
+        </li>
+    </ul>
+    <footer class="footer">
+        <span class="todo-count">{{ list.length }}条任务</span>
+        <button class="clear" @click="clear">清除所有任务</button>
+    </footer>
+</section>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script>
-        const app = new Vue({
-            el: '#app',
-            data: {
-                list: [
-                    {id: 1, content: '跑步一公里'},
-                    {id: 2, content: '跳绳100次'},
-                    {id: 3, content: '游泳100米'}
-                ]
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+    const app = new Vue({
+        el: '#app',
+        data: {
+            list: [
+                {id: 1, content: '跑步一公里'},
+                {id: 2, content: '跳绳100次'},
+                {id: 3, content: '游泳100米'}
+            ],
+            content: '',
+        },
+        methods:{
+            add(){
+                if (!this.content.trim()) return;  // 简单防空白（不影响原有逻辑，只是友好）
+                this.list.push({id: Date.now(), content: this.content}); // 使用时间戳避免id冲突
+                this.content = '';
             },
-            methods:{
-                add(){
-                    this.list.push({id: this.list.length + 1, content: this.$el.querySelector('.new-todo').value});
-                },
-                del(index){
-                    this.list = this.list.filter(item => item.id !== index)
-                }
+            del(index){
+                this.list = this.list.filter(item => item.id !== index)
+            },
+            clear(){
+                this.list = []
             }
-        });
-    </script>
-
+        }
+    });
+</script>
 </body>
 </html>
