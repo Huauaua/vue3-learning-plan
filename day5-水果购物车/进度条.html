@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="app">
+        <progress :value="value" max="100"></progress>
+        <button @click="increase">增加</button>
+    </div>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                value: 20
+            },
+            methods: {
+                increase: function () {
+                    this.value += 10;
+                }
+            }
+        })
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>并列翻译 · 语言选择</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #fde9e0;        /* 暖粉底色 */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Comic Neue', 'Segoe UI', cursive, sans-serif;
+            padding: 1.5rem;
+        }
+
+        /* 三色：奶油白 #fffaf5 · 橘粉 #ffb28b · 巧克力棕 #4f3d32 */
+        .translate-card {
+            background: #fffaf5;
+            max-width: 1100px;
+            width: 100%;
+            border-radius: 60px;
+            padding: 2rem 2rem 2.5rem 2rem;
+            box-shadow: 0 20px 0 0 #ffb28b;
+            border: 5px solid #ffb28b;
+        }
+
+        /* 头部 —— 只保留一个简单标题，不占用太多空间 */
+        .title {
+            text-align: center;
+            color: #4f3d32;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+        }
+
+        .title span {
+            background: #ffb28b;
+            padding: 0.2rem 1.2rem;
+            border-radius: 50px;
+            border: 3px solid #4f3d32;
+            box-shadow: 0 5px 0 0 #c9734c;
+            display: inline-block;
+        }
+
+        /* 左右布局 + 中间箭头 */
+        .translate-main {
+            display: flex;
+            align-items: stretch;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        /* 左右两个大面板 */
+        .lang-panel {
+            flex: 1;
+            background: #fffaf5;
+            border: 5px solid #ffb28b;
+            border-radius: 40px;
+            padding: 1.2rem 1rem 1rem 1rem;
+            box-shadow: 0 12px 0 0 #ffb28b;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 下拉菜单行 */
+        .select-row {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 1.2rem;
+            background: #fff0e8;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            border: 3px solid #ffb28b;
+        }
+
+        .select-row label {
+            font-size: 1.5rem;
+            color: #4f3d32;
+            font-weight: 600;
+        }
+
+        select {
+            flex: 1;
+            background: #fffaf5;
+            border: 3px solid #4f3d32;
+            border-radius: 40px;
+            padding: 0.6rem 1rem;
+            font-size: 1.4rem;
+            font-family: 'Comic Neue', cursive;
+            color: #4f3d32;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            box-shadow: 0 4px 0 0 #4f3d32;
+            appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%234f3d32'><path d='M7 10l5 5 5-5z'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.8rem;
+        }
+
+        /* 大大的文本框 */
+        .textbox {
+            flex: 1;
+            min-height: 250px;
+            background: #fffaf5;
+            border: 4px solid #ffb28b;
+            border-radius: 30px;
+            padding: 1.5rem;
+            font-size: 1.8rem;
+            font-family: 'Comic Neue', cursive;
+            color: #4f3d32;
+            resize: none;
+            outline: none;
+            box-shadow: inset 0 -4px 0 #ffd7c2, 0 6px 0 0 #c9734c;
+        }
+
+        .textbox::placeholder {
+            color: #ffcab3;
+            font-size: 1.8rem;
+        }
+
+        /* 中间箭头区域 */
+        .arrow-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+        }
+
+        .double-arrow {
+            background: #ffb28b;
+            color: #4f3d32;
+            font-size: 3.5rem;
+            line-height: 1;
+            padding: 0.8rem 0.5rem;
+            border-radius: 60px;
+            border: 5px solid #4f3d32;
+            box-shadow: 0 8px 0 0 #c9734c;
+            transform: rotate(90deg);
+            writing-mode: vertical-rl;
+            text-orientation: upright;
+            font-weight: bold;
+        }
+
+        .double-arrow span {
+            display: block;
+            transform: scale(1.2);
+        }
+
+        /* 底部只保留一个简单的翻译按钮，去掉多余语言选项 */
+        .footer {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .translate-btn {
+            background: #ffb28b;
+            border: 5px solid #4f3d32;
+            border-radius: 60px;
+            padding: 1.2rem 4rem;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #4f3d32;
+            box-shadow: 0 10px 0 0 #c9734c;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: default;
+        }
+
+        /* 无功能，仅样式 */
+    </style>
+</head>
+<body>
+<div class="translate-card">
+    <div class="title">
+        <span>🌐 并排翻译器</span>
+    </div>
+
+    <!-- 左右主体 + 中间箭头 -->
+    <div class="translate-main">
+        <!-- 左侧：待翻译区 -->
+        <div class="lang-panel">
+            <div class="select-row">
+                <label>📝 从</label>
+                <label>
+                    <select v-model="obj.from">
+                        <option value="en" selected>🇬🇧 英语</option>
+                        <option value="zh">🇨🇳 中文</option>
+                        <option value="es">🇪🇸 西班牙语</option>
+                        <option value="ja">🇯🇵 日语</option>
+                        <option value="ko">🇰🇷 韩语</option>
+                        <option value="fr">🇫🇷 法语</option>
+                    </select>
+                </label>
+            </div>
+            <textarea class="textbox" placeholder="输入要翻译的文字..." v-model="obj.message"></textarea>
+        </div>
+
+        <!-- 中间双箭头 -->
+<!--        <div class="arrow-center">-->
+<!--            <div class="double-arrow">-->
+<!--                <span>⬅</span>-->
+<!--                <span>➡</span>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <!-- 右侧：翻译结果区 -->
+        <div class="lang-panel">
+            <div class="select-row">
+                <label>🌍 到</label>
+                <label>
+                    <select v-model="obj.to">
+                        <option value="zh" selected>🇨🇳 中文</option>
+                        <option value="en">🇬🇧 英语</option>
+                        <option value="es">🇪🇸 西班牙语</option>
+                        <option value="ja">🇯🇵 日语</option>
+                        <option value="ko">🇰🇷 韩语</option>
+                        <option value="fr">🇫🇷 法语</option>
+                    </select>
+                </label>
+            </div>
+            <textarea class="textbox" placeholder="翻译结果...">{{ translateText }}</textarea>
+        </div>
+    </div>
+
+    <!-- 底部仅保留翻译按钮 -->
+    <div class="footer">
+        <button class="translate-btn" onclick="alert('Hello!')">
+            <span>✨</span> 点我翻译 <span>✨</span>
+        </button>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.js"></script>
+<script>
+    // 接口地址：https://applet-base-api-t.itheima.net/api/translate
+    new Vue({
+        el: '.translate-card',
+        data: {
+            translateText: '',
+            obj: {
+                message: 'Hello Vue!',
+                from: 'en',
+                to: 'zh'
+            },
+        },
+        watch: {
+            obj:{
+                deep: true,
+                immediate: true,
+                handler (newValue) {
+                    console.log(newValue)
+                    clearTimeout(this.timer)
+                    if(newValue.message.trim() === ''){
+                        this.translateText = ''
+                        return
+                    }
+                    this.timer = setTimeout(async () => {
+                        const res = await axios({
+                            url: 'https://applet-base-api-t.itheima.net/api/translate',
+                            params: newValue
+                        })
+                        this.translateText = res.data.data
+                        console.log(res.data.data)
+                    }, 300)
+                },
+            }
+
+            // 'obj.message' (newValue) {
+            //     clearTimeout(this.timer)
+            //     this.timer = setTimeout(async () => {
+            //         const res = await axios({
+            //             url: 'https://applet-base-api-t.itheima.net/api/translate',
+            //             params: {
+            //                 words: newValue,
+            //                 from: this.obj.from,
+            //                 to: this.obj.to
+            //             }
+            //         })
+            //         this.translateText = res.data.data
+            //         console.log(res.data.data)
+            //     }, 300)
+            // }
+        }
+    })
+</script>
+</body>
+</html>

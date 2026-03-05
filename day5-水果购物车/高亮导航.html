@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        .nav {
+            display: flex;
+            justify-content: center;
+            background-color: lightblue;
+            height: 50px;
+            line-height: 50px;
+            border-bottom: 2px solid red;
+        }
+        li{
+            width: 200px;
+            list-style: none;
+            text-align: center;
+            user-select: none;
+        }
+        li a{
+            display: block;
+            -webkit-user-drag: none;
+            text-decoration: none;
+            color: black;
+        }
+        .active {
+            background-color: red;
+        }
+        li:not(.active) a:hover {
+            background-color: lightsalmon;
+        }
+    </style>
+</head>
+<body>
+    <ul class="nav">
+        <li v-for="(item, index) in items" :key="index" v-bind:class="{'active': activeIndex === index }">
+            <a href="#" @click="onClick(index)">{{ item }}</a>
+        </li>
+    </ul>
+    <script>
+        new Vue({
+            el: '.nav',
+            data: {
+                activeIndex: 0,
+                items: ['首页', '手机', '电脑', '家电', '生鲜', '百货', '国际']
+            },
+            methods: {
+                onClick: function (index) {
+                    this.activeIndex = index;
+
+                },
+                hello: function () {
+                    alert('hello')
+                }
+            }
+        })
+    </script>
+
+</body>
+</html>
