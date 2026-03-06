@@ -5,10 +5,10 @@
     <title>水果购物车 · 三色样式</title>
     <style>
         /* ===== 三色定义 =====
-           主色1: 暖白 #faf7f2 (背景/卡片)
-           主色2: 蜜瓜橙 #f8b88b (强调/点缀)
-           主色3: 深栗 #5c4b3a (文字/边框)
-        */
+   主色1: 暖白 #faf7f2 (背景/卡片)
+   主色2: 蜜瓜橙 #f8b88b (强调/点缀)
+   主色3: 深栗 #5c4b3a (文字/边框)
+*/
         * {
             margin: 0;
             padding: 0;
@@ -17,7 +17,7 @@
         }
 
         body {
-            background-color: #faf7f2;           /* 暖白基底 */
+            background-color: #faf7f2;
             min-height: 100vh;
             display: flex;
             align-items: flex-start;
@@ -28,40 +28,18 @@
         .app-container {
             max-width: 1300px;
             width: 100%;
-            background-color: #faf7f2;            /* 主色1 背景 */
-            border-radius: 48px 48px 40px 40px;
-            padding: 30px 30px 40px;
-            box-shadow: 0 25px 0 0 #f8b88b,       /* 主色2 厚投影 */
-            0 30px 25px -15px rgba(92,75,58,0.3);
+            background-color: #faf7f2;
+            border-radius: 48px;
+            padding: 30px;
+            box-shadow: 0 25px 0 0 #f8b88b;
             border: 3px solid #f8b88b;
         }
 
-        /* 横幅图片区 */
-        .banner-box {
-            width: 100%;
-            height: 400px;
-            border-radius: 36px 36px 24px 24px;
-            overflow: hidden;
-            border: 4px solid #f8b88b;            /* 主色2边框 */
-            box-shadow: 0 12px 0 0 #f8b88b;
-            margin-bottom: 25px;
-            background-color: #5c4b3a;             /* 主色3 占底 */
-        }
-
-        .banner-box img {
-            width: 100%;
-            height: 200%;
-            margin-top: -80px;
-            object-fit: fill;
-            display: block;
-            mix-blend-mode: normal;                /* 保持原图色彩，但图本身颜色不计入三色限制 */
-        }
 
         /* 面包屑 */
         .breadcrumb {
             display: flex;
             gap: 15px;
-            align-items: center;
             padding: 10px 20px;
             background-color: #faf7f2;
             border-radius: 60px;
@@ -71,7 +49,7 @@
         }
 
         .breadcrumb a {
-            color: #5c4b3a;                        /* 主色3 */
+            color: #5c4b3a;
             text-decoration: none;
             font-size: 1.3rem;
             font-weight: 600;
@@ -79,108 +57,190 @@
             border-radius: 40px;
             background-color: #faf7f2;
             border: 2px solid #f8b88b;
-            box-shadow: 0 3px 0 0 #f8b88b;
-            transition: 0.1s;
         }
 
         .breadcrumb a:hover {
             background-color: #f8b88b;
             color: #faf7f2;
-            border-color: #5c4b3a;
         }
 
         /* 主体表格区域 */
         .main {
             background-color: #faf7f2;
             border-radius: 36px;
-            padding: 20px 0 10px;
+            padding: 20px 0;
             margin-bottom: 25px;
             border: 3px solid #f8b88b;
             box-shadow: 0 12px 0 0 #f8b88b;
-            min-height: 200px;
+            overflow-x: auto;
+            min-height: 400px;
         }
 
-        /* 表格模拟 */
+        /* 表格布局 */
         .table {
-            display: flex;
-            flex-direction: column;
             width: 100%;
+            border-collapse: collapse;
         }
 
-        .thead {
-            padding: 0 20px 15px;
+        .thead, .tbody {
+            display: table-header-group;
         }
 
+        .tr {
+            display: table-row;
+        }
+
+        .td {
+            display: table-cell;
+            padding: 15px 10px;
+            text-align: center;
+            vertical-align: middle;
+            color: #5c4b3a;
+            border-bottom: 2px solid #f8b88b;
+        }
+
+        /* 表头样式 */
         .thead .tr {
-            height: 45px;
-            background-color: #f8b88b;             /* 主色2 表头 */
-            border-radius: 40px;
-            border: 3px solid #5c4b3a;              /* 主色3边框 */
-            box-shadow: 0 6px 0 0 #5c4b3a;
+            background-color: #f8b88b;
         }
 
-        .tbody {
-            padding: 5px 20px;
+        .thead .td {
+            font-weight: 700;
+            border-bottom: 3px solid #5c4b3a;
         }
 
+        /* 表格行 */
         .tbody .tr {
-            height: 70px;
             background-color: #fff8f2;
-            border-radius: 50px;
-            border: 3px solid #f8b88b;
-            box-shadow: 0 8px 0 0 #f8b88b;
-            margin-bottom: 18px;
-            transition: 0.1s;
         }
 
-        .tbody .tr.active {
-            background-color: #f8b88b;              /* 主色2 激活行 */
-            border-color: #5c4b3a;
-            box-shadow: 0 8px 0 0 #5c4b3a;
-            transform: scale(1.01);
+        .tbody .tr:hover {
+            background-color: #fff2e8;
         }
 
-        /* 底部提示 — 空空如也 */
+        /* 复选框 */
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #f8b88b;
+        }
+
+        /* 数字输入框 */
+        .my-input-number {
+            display: inline-flex;
+            align-items: center;
+            border: 2px solid #f8b88b;
+            border-radius: 30px;
+            overflow: hidden;
+            background-color: #faf7f2;
+        }
+
+        .my-input-number button {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background-color: #faf7f2;
+            color: #5c4b3a;
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .my-input-number button:hover {
+            background-color: #f8b88b;
+            color: #faf7f2;
+        }
+
+        .my-input-number .my-input__inner {
+            width: 50px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: #5c4b3a;
+            background-color: #fff8f2;
+            border-left: 2px solid #f8b88b;
+            border-right: 2px solid #f8b88b;
+            padding: 6px 0;
+        }
+
+        .decrease {
+            border-radius: 30px 0 0 30px;
+        }
+
+        .increase {
+            border-radius: 0 30px 30px 0;
+        }
+
+        /* 删除按钮 */
+        .td button {
+            background-color: #faf7f2;
+            border: 2px solid #f8b88b;
+            color: #5c4b3a;
+            font-size: 1rem;
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .td button:hover {
+            background-color: #f8b88b;
+            color: #faf7f2;
+        }
+
+        /* 底部提示 */
         .bottom {
             text-align: center;
+            align-content: center;
             font-size: 2rem;
-            font-weight: 600;
-            color: #5c4b3a;                          /* 主色3 */
+            color: #5c4b3a;
             background-color: #faf7f2;
             border: 4px dashed #f8b88b;
             border-radius: 60px;
             padding: 25px 15px;
             box-shadow: 0 15px 0 0 #f8b88b;
-            letter-spacing: 4px;
+            min-height: 400px;
         }
-
-        /* 确保不超过三色 —— 所有可见颜色均为 #faf7f2 / #f8b88b / #5c4b3a
-           图片颜色、阴影透明叠加不计数 */
     </style>
 </head>
 <body>
 <div class="app-container" id="app">
-    <div class="banner-box"><img src="./asset/header.png" alt="水果横幅"></div>
     <div class="breadcrumb"><a href="#">首页</a><a href="#">水果购物车</a></div>
     <div class="main" v-if="fruitList.length > 0">
         <div class="table">
+            <!-- 表头 -->
             <div class="thead">
-                <div class="tr"></div>
+                <div class="tr">
+                    <div class="th">选中</div>
+                    <div class="th">名称</div>
+                    <div class="th">数量</div>
+                    <div class="th">单价</div>
+                    <div class="th">小计</div>
+                    <div class="th">操作</div>
+                </div>
             </div>
+            <!-- 表体 -->
             <div class="tbody">
-                <div v-for="(item, index) in fruitList" :key="item.id" class="tr active">
-                    <div class="td"><label><input type="checkbox" v-model="item.ischecked"/></label></div>
-<!--                    <div class="td"><img src="asset/cole.jpg" alt="cole"></div>-->
-                    <div class="td">6</div>
+                <div v-for="(item, index) in fruitList" :key="item.id" class="tr">
+                    <!-- 选中 -->
+                    <div class="td">
+                        <label><input type="checkbox" v-model="item.ischecked"/></label>
+                    </div>
+                    <!-- 名称（这里缺少名称数据，先写固定值） -->
+                    <div class="td">火龙果</div>
+                    <!-- 数量输入组件 -->
                     <div class="td">
                         <div class="my-input-number">
-                            <button class="decrease">-</button>
-                            <span class="my-input__inner">2</span>
-                            <button class="increase">+</button>
+                            <button class="decrease" @click="decreaseNum(item)">-</button>
+                            <span class="my-input__inner">{{ item.num }}</span>
+                            <button class="increase" @click="increaseNum(item)">+</button>
                         </div>
                     </div>
-                    <div class="td">12</div>
-                    <div class="td"><button>删除</button></div>
+                    <!-- 单价 -->
+                    <div class="td">¥{{ item.price }}</div>
+                    <!-- 小计 -->
+                    <div class="td">¥{{ item.num * item.price }}</div>
+                    <!-- 操作 -->
+                    <div class="td"><button @click="delItem(item.id)">删除</button></div>
                 </div>
             </div>
         </div>
@@ -194,17 +254,37 @@
     const app = new Vue({
         el: '#app',
         data: {
-
             fruitList: [
                 {
-                    id:1,
-                    icon:'./assets/cole.jpg',
-                    ischecked:false,
+                    id: 1,
+                    name: '火龙果',
+                    icon: './asset/cole.jpg',
+                    ischecked: false,
                     num: 2,
                     price: 6
                 },
-            ]      // 空数组让底部显示「空空如也」
-            // 原代码中 fruitList 写成了 fruitsList，修正为 fruitList
+                {
+                    id: 2,
+                    name: '火龙果',
+                    icon: './asset/cole.jpg',
+                    ischecked: false,
+                    num: 2,
+                    price: 6
+                }
+            ]
+        },
+        methods: {
+            increaseNum(item) {
+                item.num++
+            },
+            decreaseNum(item) {
+                if (item.num > 1) {
+                    item.num--
+                }
+            },
+            delItem(id) {
+                this.fruitList = this.fruitList.filter(item => item.id !== id)
+            }
         }
     })
 </script>

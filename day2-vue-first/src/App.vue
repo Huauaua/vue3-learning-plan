@@ -4,6 +4,7 @@ import Mylink from "@/components/Mylink.vue";
 import ComputeAmount from "./components/ComputeAmount.vue";
 import MyString from "@/components/String.vue";
 import {router} from "./router";
+import ProductTable from './components/ProductTable.vue'
 </script>
 <style>
 /* 1. 全局样式和字体优化 */
@@ -65,6 +66,7 @@ a:hover {
     <!-- Prop验证示例 -->
     <MyString message="prop验证" style="background-color: lightgray">String组件A</MyString>
     <MyString :message="1 + 1" style="background-color: lightgray">String组件B</MyString>
+    <ProductTable></ProductTable>
   <!-- 路由视图 -->
   <div style="background-color: lightgray">
     <h1>
