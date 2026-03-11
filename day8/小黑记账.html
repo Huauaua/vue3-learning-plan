@@ -254,7 +254,7 @@
                 <label>💰 金额（元）</label>
                 <input v-model="newItem.price" type="number" id="itemPrice" placeholder="0.00" min="0" step="0.01" autocomplete="off" @keydown.enter="addItem()">
             </div>
-            <button class="add-btn" id="addRecordBtn" @click="addItem(newItem.name, newItem.price)">
+            <button class="add-btn" id="addRecordBtn" @click="addItem()">
                 <span>+</span> 添加记录
             </button>
         </div>
@@ -272,21 +272,21 @@
             </tr>
             </thead>
             <tbody id="tableBody">
-                <tr v-for="(item, index) in items" :key="item.id">
-                    <td class="id-col">{{ index + 1 }}</td>
-                    <td>{{ item.name }}</td>
-                    <td class="price-col" :style="{color: item.price > 500 ? 'red' : 'black'}">{{ item.price }}</td>
-                    <td class="action-col">
-                        <button class="action-btn" @click="deleteItem(index)">
-                            ✕
-                        </button>
-                    </td>
-                </tr>
-                <tr class="total-row">
-                    <td colspan="2">合计</td>
-                    <td class="price-col total-number">{{ total }}</td>
-                    <td class="action-col"></td>
-                </tr>
+            <tr v-for="(item, index) in items" :key="item.id">
+                <td class="id-col">{{ index + 1 }}</td>
+                <td>{{ item.name }}</td>
+                <td class="price-col" :style="{color: parseFloat(item.price) > 500 ? 'red' : 'black'}">{{ item.price }}</td>
+                <td class="action-col">
+                    <button class="action-btn" @click="deleteItem(index)">
+                        ✕
+                    </button>
+                </td>
+            </tr>
+            <tr class="total-row">
+                <td colspan="2">合计</td>
+                <td class="price-col total-number">{{ total }}</td>
+                <td class="action-col"></td>
+            </tr>
             </tbody>
         </table>
     </div>
@@ -313,6 +313,7 @@
                 { id: 4, name: '电脑', price: '7000.00' }
             ],
             newItem: { name: '', price: '' },
+            chart: null, // 存储图表实例
         },
         computed:{
             total() {
@@ -321,12 +322,10 @@
                 }, 0);
             }
         },
-        created() {
-
-        },
         mounted(){
-            var chart = echarts.init(document.getElementById('chart')); // Initialize the chart
-            option = {
+            // 初始化图表
+            this.chart = echarts.init(document.getElementById('chart'));
+            const option = {
                 title: {
                     text: '消费账单统计图',
                     subtext: '消费账单统计',
@@ -344,13 +343,7 @@
                         name: '消费账单',
                         type: 'pie',
                         radius: '50%',
-                        data: [
-                            { value: 1048, name: 'Search Engine' },
-                            { value: 735, name: 'Direct' },
-                            { value: 580, name: 'Email' },
-                            { value: 484, name: 'Union Ads' },
-                            { value: 300, name: 'Video Ads' }
-                        ],
+                        data: [],
                         emphasis: {
                             itemStyle: {
                                 shadowBlur: 10,
@@ -361,32 +354,76 @@
                     }
                 ]
             };
-            chart.setOption(option);
+            this.chart.setOption(option);
 
+            // 加载数据并更新图表
+            this.getList();
+
+            // 监听窗口大小变化，自适应图表
+            window.addEventListener('resize', () => {
+                this.chart.resize();
+            });
         },
         methods: {
-            addItem(name, price) {
+            getList() {
+                // 更新图表数据
+                this.updateChart();
+            },
+
+            // 新增：更新图表数据的方法
+            updateChart() {
+                if (this.chart) {
+                    this.chart.setOption({
+                        series: [
+                            {
+                                data: this.items.map(item => ({
+                                    value: parseFloat(item.price),
+                                    name: item.name
+                                }))
+                            }
+                        ]
+                    });
+                }
+            },
+
+            addItem() {
                 // 获取输入的值
-                const itemName = name;
-                const itemPrice = price;
-                if (itemName && itemPrice) {
+                const itemName = this.newItem.name;
+                const itemPrice = this.newItem.price;
+
+                if (itemName && itemPrice && parseFloat(itemPrice) > 0) {
+                    // 生成新ID（取最大ID+1）
+                    const newId = this.items.length > 0
+                        ? Math.max(...this.items.map(item => item.id)) + 1
+                        : 1;
+
                     // 添加到items数组
                     this.items.push({
-                        id: this.items.length + 1,
+                        id: newId,
                         name: itemName,
                         price: parseFloat(itemPrice).toFixed(2)
                     });
+
                     // 清空输入框
                     this.newItem.name = '';
                     this.newItem.price = '';
+
+                    // 更新图表
+                    this.updateChart();
+                } else {
+                    alert('请填写完整的消费信息且金额大于0');
                 }
             },
+
             deleteItem(index) {
-                this.items = this.items.filter(item => item.id !== this.items[index].id);
+                // 修复删除逻辑：根据索引删除
+                this.items.splice(index, 1);
+
+                // 更新图表
+                this.updateChart();
             }
         }
     })
 </script>
-<!-- 注：Inter字体通过系统回退，干净轻量 -->
 </body>
 </html>
