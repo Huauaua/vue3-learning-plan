@@ -22,7 +22,7 @@ export default defineComponent({
     justify-content: center;
 
     font-size: 30px;
-    margin-top: 10px;
+    margin: 10px 0;
   }
 
 </style>
