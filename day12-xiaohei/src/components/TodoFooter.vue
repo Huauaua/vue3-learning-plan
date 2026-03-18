@@ -3,12 +3,23 @@ import {defineComponent} from 'vue'
 
 export default defineComponent({
   name: "TodoFooter",
+  props: {
+    list: {
+      type: Array,
+      required: true
+    }
+  },
+  methods: {
+    clear() {
+      this.$emit('clear')
+    }
+  }
 })
 </script>
 <template>
   <footer class="footer">
-    <span class="todo-count">条任务</span>
-    <button class="clear">清除所有任务</button>
+    <span class="todo-count">{{ list.length }}条任务</span>
+    <button class="clear" @click="clear">清除所有任务</button>
   </footer>
 </template>
 

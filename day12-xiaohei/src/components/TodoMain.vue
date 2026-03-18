@@ -3,16 +3,28 @@ import {defineComponent} from 'vue'
 
 export default defineComponent({
   name: "TodoMain",
+  props: {
+    list: {
+      type: Array,
+      required: true
+    }
+  },
+  methods: {
+    removeTodo(id: number) {
+      this.$emit('del', id)
+      console.log('remove ' + id)
+    }
+  }
 })
 </script>
 
 <template>
   <ul class="todo-list">
-    <li class="todo">
+    <li class="todo" v-for="(item, index) in list" :key="item.id">
       <div class="view">
-        <span class="index"></span>
-        <label class="todo-label"></label>
-        <button class="del">删除</button>
+        <span class="index">{{ index + 1 }}</span>
+        <label class="todo-label">{{ item.name }}</label>
+        <button class="del" @click="removeTodo(item.id)">删除</button>
       </div>
     </li>
   </ul>

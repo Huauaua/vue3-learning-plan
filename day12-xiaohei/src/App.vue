@@ -1,3 +1,19 @@
+<template>
+  <section>
+    <todo-header
+        @add="handleAdd"
+    ></todo-header>
+    <todo-main
+        :list="list"
+        @del="handleRemove"
+    ></todo-main>
+    <todo-footer
+        :list="list"
+        @clear="handleClear"
+    ></todo-footer>
+  </section>
+</template>
+
 <script>
 import {createApp, defineComponent} from "vue";
 import TodoHeader from "./components/TodoHeader.vue";
@@ -11,24 +27,25 @@ export default defineComponent({
   },
   data() {
     return {
-      todos: [
-        {id: 1, title: 'todo1', completed: true},
-        {id: 2, title: 'todo2', completed: false},
-        {id: 3, title: 'todo3', completed: true},
+      list: [
+        {id: 1, name: '打篮球', completed: true},
+        {id: 2, name: '打羽毛球', completed: false},
+        {id: 3, name: '逛街', completed: true},
       ]
     }
   },
   methods: {
-
+    handleAdd(name) {
+      this.list.unshift({id: Math.random(), name, completed: false})
+    },
+    handleRemove(index) {
+      this.list = this.list.filter(item => item.id !== index)
+      console.log('dad get it ',index)
+    },
+    handleClear() {
+      this.list = []
+    }
   }
 })
 
 </script>
-
-<template>
-  <section style="border: 2px solid #aaa; border-radius: 5px; width: 500px; margin: 10px auto 0;box-shadow: 0 0 10px #aaa;">
-    <todo-header></todo-header>
-    <todo-main></todo-main>
-    <todo-footer></todo-footer>
-  </section>
-</template>

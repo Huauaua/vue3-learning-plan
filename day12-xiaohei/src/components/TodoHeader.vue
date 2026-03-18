@@ -3,6 +3,22 @@ import {defineComponent} from 'vue'
 
 export default defineComponent({
   name: "TodoHeader",
+  data() {
+    return {
+      todoName: ''
+    }
+  },
+  methods: {
+    handleAdd() {
+      if (!this.todoName.trim()) {
+        alert('任务不能为空')
+        return
+      }
+      this.$emit('add', this.todoName)
+      console.log('添加任务：', this.todoName)
+      this.todoName = ''
+    }
+  }
 })
 </script>
 
@@ -10,9 +26,9 @@ export default defineComponent({
   <header class="header">
     <h1>小黑记事本</h1>
     <label>
-      <input placeholder="请输入任务" class="new-todo">
+      <input v-model="todoName" type="text" placeholder="请输入任务" class="new-todo" @keydown.enter="handleAdd">
     </label>
-    <button class="add">添加</button>
+    <button class="add" @click="handleAdd" >添加</button>
   </header>
 </template>
 
@@ -21,7 +37,7 @@ export default defineComponent({
   .header {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: normal;
     gap: 0.6rem 0.8rem;
     margin-bottom: 2.2rem;
     background: #fef9f2;
@@ -31,16 +47,22 @@ export default defineComponent({
     border: 2px solid #ffb7b2;
   }
   .header h1 {
+    width: 100%;
+    text-align: center;
     font-size: 1.9rem;
     font-weight: 550;
     color: #5e4b3c;                      /* 可可棕（主色3） */
     letter-spacing: 1px;
     margin-right: 0.2rem;
+    display: block;
     background: #fef9f2;
     padding: 0 0.2rem;
     text-shadow: 2px 2px 0 #ffd4cd;
   }
   .new-todo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex: 2 1 200px;
     background: #fff9f5;
     border-radius: 30px;
