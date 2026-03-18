@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>day12-xiaohei</title>
+      <style>
+          /* 只使用三种配色： 奶油白 #fef9f2 · 蜜桃粉 #ffb7b2 · 可可棕 #5e4b3c */
+          * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+              font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+          }
+          body {
+              background: white;               /* 蜜桃粉背景（主色1） */
+              min-height: 100vh;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 1.2rem;
+          }
+          #app {
+              max-width: 620px;
+              width: 100%;
+              background: #fef9f2;                /* 奶油白卡片（主色2） */
+              border-radius: 42px 42px 38px 38px;
+              padding: 2rem 1.8rem 1.8rem 1.8rem;
+              box-shadow: 0 20px 28px -8px rgba(94, 75, 60, 0.25),
+              0 6px 0 0 #ffe2dc inset,    /* 柔和内框 */
+              0 -6px 0 0 #ffe2dc inset;
+              border: 2px solid #ffe0d9;
+          }
+      </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
