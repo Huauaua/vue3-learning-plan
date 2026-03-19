@@ -27,11 +27,12 @@ export default defineComponent({
   },
   data() {
     return {
-      list: [
-        {id: 1, name: '打篮球', completed: true},
-        {id: 2, name: '打羽毛球', completed: false},
-        {id: 3, name: '逛街', completed: true},
-      ]
+      list: JSON.parse(localStorage.getItem("list")) ||
+          [
+          {id: 1, name: '打篮球', completed: true},
+          {id: 2, name: '打羽毛球', completed: false},
+          {id: 3, name: '逛街', completed: true},
+        ]
     }
   },
   methods: {
@@ -45,7 +46,15 @@ export default defineComponent({
     handleClear() {
       this.list = []
     }
-  }
+  },
+  watch: {
+    list: {
+      deep: true,
+      handler (newValue){
+        localStorage.setItem('list', JSON.stringify(newValue))
+      },
+    }
+  },
 })
 
 </script>
