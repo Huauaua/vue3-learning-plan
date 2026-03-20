@@ -26,13 +26,13 @@ export default defineComponent({
     TodoFooter
   },
   data() {
+    const storedList = JSON.parse(localStorage.getItem("list"));
     return {
-      list: JSON.parse(localStorage.getItem("list")) ||
-          [
-          {id: 1, name: '打篮球', completed: true},
-          {id: 2, name: '打羽毛球', completed: false},
-          {id: 3, name: '逛街', completed: true},
-        ]
+      list: storedList && storedList.length ? storedList : [
+        {id: 1, name: '打篮球', completed: true},
+        {id: 2, name: '打羽毛球', completed: false},
+        {id: 3, name: '逛街', completed: true},
+      ]
     }
   },
   methods: {

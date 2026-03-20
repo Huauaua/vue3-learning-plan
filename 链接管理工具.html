@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>可乐收藏站</title>
+    <!-- 引入 Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- 字体图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 头部样式 */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* 添加链接表单 */
+        .add-form {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .form-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .form-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+        }
+
+        /* 标签筛选栏 */
+        .tags-filter {
+            background: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tags-filter > i {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .tag-btn {
+            padding: 6px 16px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .tag-btn:hover {
+            border-color: #3b82f6;
+            color: #3b82f6;
+        }
+
+        .tag-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            background: white;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        /* 卡片网格 */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        /* 卡片样式 */
+        .link-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+            border: 1px solid #e0e0e0;
+        }
+
+        .link-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .favicon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+        }
+
+        .card-title {
+            flex: 1;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            word-break: break-word;
+        }
+
+        .card-url {
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-url a {
+            color: #3b82f6;
+            text-decoration: none;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .card-url a:hover {
+            text-decoration: underline;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            background: #f5f5f5;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .visit-count {
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            color: #dc2626;
+            background: #fef2f2;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            background: white;
+            border-radius: 12px;
+            color: #999;
+            border: 1px solid #e0e0e0;
+        }
+
+        .stats {
+            padding: 6px 16px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 20px;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group {
+                flex-direction: column;
+            }
+            .tags-filter {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1>
+                <i class="fas fa-bookmark"></i>
+                可乐收藏站
+            </h1>
+        </div>
+
+        <!-- 添加链接表单 -->
+        <div class="add-form">
+            <div class="form-group">
+                <input
+                        type="text"
+                        class="form-input"
+                        v-model="newLink.title"
+                        placeholder="📝 网站名称 (例如: Vue.js 官网)"
+                        @keyup.enter="addLink">
+                <input
+                        type="url"
+                        class="form-input"
+                        v-model="newLink.url"
+                        placeholder="🔗 网址 (例如: https://vuejs.org)"
+                        @keyup.enter="addLink">
+                <input
+                        type="text"
+                        class="form-input"
+                        v-model="newLink.tagsInput"
+                        placeholder="🏷️ 标签 (用空格分隔，例如: 前端 教程)"
+                        @keyup.enter="addLink">
+                <button class="btn" @click="addLink">
+                    <i class="fas fa-plus"></i> 添加链接
+                </button>
+            </div>
+        </div>
+
+        <!-- 筛选栏 -->
+        <div class="tags-filter">
+            <i class="fas fa-filter"></i>
+            <button
+                    class="tag-btn"
+                    :class="{ active: currentTag === '全部' }"
+                    @click="currentTag = '全部'">
+                全部 ({{ links.length }})
+            </button>
+            <button
+                    v-for="tag in allTags"
+                    :key="tag"
+                    class="tag-btn"
+                    :class="{ active: currentTag === tag }"
+                    @click="currentTag = tag">
+                {{ tag }} ({{ getTagCount(tag) }})
+            </button>
+            <div class="search-box">
+                <input
+                        type="text"
+                        v-model="searchKeyword"
+                        placeholder="🔍 搜索标题或网址..."
+                        @input="searchKeyword = $event.target.value">
+            </div>
+            <!-- 统计信息 -->
+            <div class="stats">
+                <i class="fas fa-chart-line"></i> 找到 {{ filteredLinks.length }} 个链接
+            </div>
+        </div>
+
+        <!-- 卡片网格 -->
+        <div class="cards-grid">
+            <div v-for="link in filteredLinks" :key="link.id" class="link-card">
+                <div class="card-header">
+                    <img :src="getFavicon(link.url)" class="favicon" @error="handleFaviconError">
+                    <div class="card-title">{{ link.title }}</div>
+                </div>
+                <div class="card-url">
+                    <i class="fas fa-link"></i>
+                    <a :href="link.url" target="_blank" @click="incrementClick(link)">{{ link.url }}</a>
+                </div>
+                <div class="card-tags">
+                        <span v-for="tag in link.tags" :key="tag" class="tag">
+                            <i class="fas fa-tag"></i> {{ tag }}
+                        </span>
+                </div>
+                <div class="card-footer">
+                        <span class="visit-count">
+                            <i class="fas fa-eye"></i> 访问 {{ link.clickCount || 0 }} 次
+                        </span>
+                    <button class="delete-btn" @click="deleteLink(link.id)">
+                        <i class="fas fa-trash-alt"></i> 删除
+                    </button>
+                </div>
+            </div>
+
+            <!-- 空状态 -->
+            <div v-if="filteredLinks.length === 0" class="empty-state">
+                <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                <p>还没有链接呢～ 快添加一些叭！✨</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const { createApp, ref, computed, onMounted } = Vue;
+
+    createApp({
+        setup() {
+            // 链接数据
+            const links = ref([]);
+
+            // 新链接表单
+            const newLink = ref({
+                title: '',
+                url: '',
+                tagsInput: ''
+            });
+
+            // 筛选
+            const currentTag = ref('全部');
+            const searchKeyword = ref('');
+
+            // 获取所有标签
+            const allTags = computed(() => {
+                const tagsSet = new Set();
+                links.value.forEach(link => {
+                    link.tags.forEach(tag => {
+                        tagsSet.add(tag);
+                    });
+                });
+                return Array.from(tagsSet).sort();
+            });
+
+            // 获取标签数量
+            const getTagCount = (tag) => {
+                return links.value.filter(link => link.tags.includes(tag)).length;
+            };
+
+            // 筛选后的链接
+            const filteredLinks = computed(() => {
+                let result = links.value;
+
+                // 按标签筛选
+                if (currentTag.value !== '全部') {
+                    result = result.filter(link => link.tags.includes(currentTag.value));
+                }
+
+                // 按关键词搜索
+                if (searchKeyword.value.trim()) {
+                    const keyword = searchKeyword.value.toLowerCase();
+                    result = result.filter(link =>
+                        link.title.toLowerCase().includes(keyword) ||
+                        link.url.toLowerCase().includes(keyword)
+                    );
+                }
+
+                return result;
+            });
+
+            // 添加链接
+            const addLink = () => {
+                if (!newLink.value.title.trim() || !newLink.value.url.trim()) {
+                    alert('请填写网站名称和网址哦！(｡•ᴗ•)ﾉ');
+                    return;
+                }
+
+                // 处理标签
+                let tags = [];
+                if (newLink.value.tagsInput.trim()) {
+                    tags = newLink.value.tagsInput.trim().split(/\s+/);
+                }
+
+                const newLinkObj = {
+                    id: Date.now(),
+                    title: newLink.value.title.trim(),
+                    url: newLink.value.url.trim(),
+                    tags: tags,
+                    clickCount: 0,
+                    createdAt: new Date().toISOString()
+                };
+
+                links.value.unshift(newLinkObj);
+                saveToLocalStorage();
+
+                // 清空表单
+                newLink.value = {
+                    title: '',
+                    url: '',
+                    tagsInput: ''
+                };
+            };
+
+            // 删除链接
+            const deleteLink = (id) => {
+                if (confirm('确定要删除这个链接吗？(｡•́︿•̀｡)')) {
+                    links.value = links.value.filter(link => link.id !== id);
+                    saveToLocalStorage();
+
+                    // 如果当前标签没有链接了，切回全部
+                    if (currentTag.value !== '全部' && getTagCount(currentTag.value) === 0) {
+                        currentTag.value = '全部';
+                    }
+                }
+            };
+
+            // 增加访问次数
+            const incrementClick = (link) => {
+                link.clickCount = (link.clickCount || 0) + 1;
+                saveToLocalStorage();
+            };
+
+            // 获取 favicon
+            const getFavicon = (url) => {
+                try {
+                    const urlObj = new URL(url);
+                    return `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=64`;
+                } catch(e) {
+                    return 'https://www.google.com/s2/favicons?domain=default&sz=64';
+                }
+            };
+
+            // favicon 加载失败时的处理
+            const handleFaviconError = (event) => {
+                event.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"%3E%3Cpath fill="%23667eea" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/%3E%3C/svg%3E';
+            };
+
+            // 保存到 localStorage
+            const saveToLocalStorage = () => {
+                localStorage.setItem('linkManager', JSON.stringify(links.value));
+            };
+
+            // 加载数据
+            const loadFromLocalStorage = () => {
+                const saved = localStorage.getItem('linkManager');
+                if (saved) {
+                    links.value = JSON.parse(saved);
+                } else {
+                    // 添加一些示例数据
+                    links.value = [
+                        {
+                            id: 1,
+                            title: 'Vue.js 官方文档',
+                            url: 'https://vuejs.org/',
+                            tags: ['前端', '框架', '文档'],
+                            clickCount: 5
+                        },
+                        {
+                            id: 2,
+                            title: 'MDN Web 文档',
+                            url: 'https://developer.mozilla.org/zh-CN/',
+                            tags: ['前端', '教程', '文档'],
+                            clickCount: 3
+                        },
+                        {
+                            id: 3,
+                            title: 'GitHub',
+                            url: 'https://github.com/',
+                            tags: ['开发', '代码托管'],
+                            clickCount: 8
+                        },
+                        {
+                            id: 4,
+                            title: 'Tailwind CSS',
+                            url: 'https://tailwindcss.com/',
+                            tags: ['CSS', '框架', '样式'],
+                            clickCount: 2
+                        }
+                    ];
+                    saveToLocalStorage();
+                }
+            };
+
+            // 初始化加载数据
+            onMounted(() => {
+                loadFromLocalStorage();
+            });
+
+            return {
+                links,
+                newLink,
+                currentTag,
+                searchKeyword,
+                allTags,
+                filteredLinks,
+                getTagCount,
+                addLink,
+                deleteLink,
+                incrementClick,
+                getFavicon,
+                handleFaviconError
+            };
+        }
+    }).mount('#app');
+</script>
+</body>
+</html>
