@@ -1,10 +1,7 @@
 
 <template>
   <div id="app">
-    <Form
-      :cityId="cityId"
-      @change="handleChange"
-    ></Form>
+    <Form v-model="cityId"></Form>
   </div>
 </template>
 
@@ -20,9 +17,6 @@ export default {
     }
   },
   methods: {
-    handleChange(e) {
-      this.cityId = e.target.value
-    }
   }
 }
 

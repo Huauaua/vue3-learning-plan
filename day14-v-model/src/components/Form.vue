@@ -4,11 +4,12 @@ import {defineComponent} from 'vue'
 export default defineComponent({
   name: "Form",
   props:{
-    cityId: String
+    modelValue: String
   },
+  emits: ['update:modelValue'],
   methods:{
     handleChange(e: any){
-      this.$emit('change', e)
+      this.$emit('update:modelValue', e.target.value)
     }
   }
 })
@@ -16,7 +17,7 @@ export default defineComponent({
 
 <template>
 <div>
-  <select :value="cityId" @change="handleChange">
+  <select :value="modelValue" @change="handleChange">
     <option value="1">北京</option>
     <option value="2">上海</option>
     <option value="3">天津</option>
