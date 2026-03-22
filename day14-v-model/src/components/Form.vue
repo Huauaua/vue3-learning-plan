@@ -2,13 +2,13 @@
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-  name: "form",
+  name: "Form",
   props:{
-    cityId: Number
+    cityId: String
   },
   methods:{
     handleChange(e: any){
-      this.$emit('change', Number(e.target.value))
+      this.$emit('change', e)
     }
   }
 })

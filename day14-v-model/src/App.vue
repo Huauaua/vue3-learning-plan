@@ -1,12 +1,11 @@
-<script setup>
-
-</script>
 
 <template>
-  <Form
-    :cityId="cityId"
-    @change="handleChange"
-  ></Form>
+  <div id="app">
+    <Form
+      :cityId="cityId"
+      @change="handleChange"
+    ></Form>
+  </div>
 </template>
 
 <script>
@@ -17,12 +16,12 @@ export default {
   },
   data() {
     return {
-      cityId: 1
+      cityId: '1'
     }
   },
   methods: {
     handleChange(e) {
-      this.cityId = Number(e.target.value)
+      this.cityId = e.target.value
     }
   }
 }
