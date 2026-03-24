@@ -1,11 +1,13 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
+import EchartOne from "./components/EchartOne.vue";
 </script>
 
 <template>
   <div id="app">
     <button class="logout" @click="dialogVisible = true">退出按钮</button>
     <BaseDialog v-model:visible="dialogVisible"></BaseDialog>
+    <EchartOne></EchartOne>
   </div>
 </template>
 
