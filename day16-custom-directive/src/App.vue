@@ -1,13 +1,18 @@
 <script>
 export default {
   name: 'App',
-  mounted() {
-    this.$refs.inp.focus()
+  directives: {
+    focus: {
+      mounted(el) {
+        el.focus()
+      }
+    }
   }
 }
 </script>
 
 <template>
   <h2>自定义指令</h2>
-  <input ref="inp"/>
+  <input v-focus/>
+<!--  <input ref="inp"/>-->
 </template>
