@@ -6,13 +6,20 @@ import MyDialog from "./components/MyDialog.vue";
 <template>
   <div>
     <MyDialog>
-      <p>你确定要关闭吗？</p>
+      <template #header>
+        关闭
+      </template>
+      <template #content>
+        你确定要吗？
+      </template>
     </MyDialog>
     <MyDialog>
-      确定要删除吗？
-    </MyDialog>
-    <MyDialog>
-      <p>你确定要保存吗？</p>
+      <template #header>
+        删除
+      </template>
+      <template #content>
+        你确定要保存吗？
+      </template>
     </MyDialog>
   </div>
 </template>

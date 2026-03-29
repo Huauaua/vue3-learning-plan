@@ -9,12 +9,12 @@ export default defineComponent({
 <template>
   <div class="dialog">
     <div class="dialog-header">
-      <h3>友情提示</h3>
+      <slot name="header"></slot>
       <span class="close"> X </span>
     </div>
 
     <div class="dialog-content">
-      <slot></slot>
+      <slot name="content"></slot>
 <!--      你确定要删除吗？-->
     </div>
     <div class="dialog-footer">
