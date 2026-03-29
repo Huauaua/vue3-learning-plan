@@ -5,6 +5,14 @@ import MyDialog from "./components/MyDialog.vue";
 
 <template>
   <div>
-    <MyDialog></MyDialog>
+    <MyDialog>
+      <p>你确定要关闭吗？</p>
+    </MyDialog>
+    <MyDialog>
+      确定要删除吗？
+    </MyDialog>
+    <MyDialog>
+      <p>你确定要保存吗？</p>
+    </MyDialog>
   </div>
 </template>

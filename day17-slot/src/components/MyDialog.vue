@@ -14,7 +14,8 @@ export default defineComponent({
     </div>
 
     <div class="dialog-content">
-      你确定要删除吗？
+      <slot></slot>
+<!--      你确定要删除吗？-->
     </div>
     <div class="dialog-footer">
       <button class="cancel">取消</button>
@@ -30,8 +31,8 @@ export default defineComponent({
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 5px;
-    position: fixed;
-    top: 50%;
+    position: relative;
+    margin-top: 100px;
     left: 50%;
     transform: translate(-50%, -50%);
   }
