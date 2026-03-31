@@ -21,5 +21,13 @@ import MyDialog from "./components/MyDialog.vue";
         你确定要保存吗？
       </template>
     </MyDialog>
+    <MyDialog>
+      <template #header>
+        删除
+      </template>
+      <template #content>
+        你确定要保存吗？
+      </template>
+    </MyDialog>
   </div>
 </template>
