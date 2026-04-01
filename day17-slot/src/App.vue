@@ -18,7 +18,7 @@ import MyDialog from "./components/MyDialog.vue";
         删除
       </template>
       <template #content>
-        你确定要保存吗？
+        你确定要保存吗？0.320
       </template>
     </MyDialog>
     <MyDialog>
