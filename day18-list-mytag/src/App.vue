@@ -1,4 +1,6 @@
 <script>
+import MyTag from "./components/MyTag.vue";
+
 const defaultArr = [
   {
     id: 1,
@@ -6,7 +8,8 @@ const defaultArr = [
     icon: './assets/cole.jpg',
     ischecked: false,
     num: 1,
-    price: 13
+    price: 13,
+    taag: '水果'
   },
   {
     id: 2,
@@ -14,7 +17,8 @@ const defaultArr = [
     icon: './assets/luguanluguanlulushijiandaole.png',
     ischecked: false,
     num: 1,
-    price: 299
+    price: 299,
+    taag: '水果'
   },
   {
     id: 3,
@@ -22,7 +26,8 @@ const defaultArr = [
     icon: './assets/苹果猫.jpg',
     ischecked: false,
     num: 1,
-    price: 100
+    price: 100,
+    taag: '水果'
   },
   {
     id: 4,
@@ -30,7 +35,8 @@ const defaultArr = [
     icon: './assets/西瓜猫.jpg',
     ischecked: false,
     num: 1,
-    price: 119
+    price: 119,
+    taag: '水果'
   },
   {
     id: 5,
@@ -38,13 +44,15 @@ const defaultArr = [
     icon: './assets/桔子.png',
     ischecked: false,
     num: 1,
-    price: 88
+    price: 88,
+    taag: '水果'
   }
 ]
 export default {
+  components: {MyTag},
   data() {
     return {
-      fruitList: JSON.parse(localStorage.getItem('fruitList')) || defaultArr
+      fruitList: JSON.parse(localStorage.getItem('fruitList')) || defaultArr,
     }
   },
   computed: {
@@ -112,6 +120,7 @@ export default {
         <th>个数</th>
         <th>小计</th>
         <th>操作</th>
+        <th>标签</th>
       </tr>
     </thead>
     <tbody>
@@ -136,6 +145,7 @@ export default {
         </td>
         <td class="subtotal">{{ item.price * item.num }}</td>
         <td><button class="delete-btn" @click="delItem(item.id)">删除</button></td>
+        <td><MyTag v-model="item.taag"></MyTag></td>
       </tr>
 
       <tr v-if="fruitList.length === 0" style="text-align: center;">

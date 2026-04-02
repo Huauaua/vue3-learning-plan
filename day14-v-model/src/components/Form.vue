@@ -4,6 +4,7 @@ import {defineComponent} from 'vue'
 export default defineComponent({
   name: "Form",
   props:{
+    //这里必须用modelValue接收
     modelValue: String
   },
   emits: ['update:modelValue'],
