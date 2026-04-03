@@ -1,16 +1,62 @@
 <script lang="ts">
-import {defineComponent} from 'vue'
+import { defineComponent } from 'vue'
 import MyTag from "./MyTag.vue";
-
+// 定义商品类型
+interface Product {
+  id: number
+  name: string
+  icon: string
+  ischecked: boolean
+  num: number
+  price: number
+  tag: string
+}
 export default defineComponent({
-  name: "Table",
-  components: {MyTag},
-  props:{
-    data:{
-      type:Array,
-      required:true,
+  name: "MyTable",
+  components: { MyTag },
+  props: {
+    data: {
+      type: Array as () => Product[],
+      required: true,
     }
-  }
+  },
+  computed: {
+    selectedAll: {
+      get() {
+        return this.data.every(item => item.ischecked)
+      },
+      set(value) {
+        this.data.forEach(item => item.ischecked = value)
+      }
+    },
+    selectedCount() {
+      return this.data.reduce((count, item) =>
+          item.ischecked ? count + item.num : count, 0
+      )
+    },
+    totalPrice() {
+      return this.data.reduce((total, item) =>
+          item.ischecked ? total + item.price * item.num : total, 0
+      )
+    }
+  },
+  methods: {
+    increaseNum(item:Product) {
+      item.num++
+    },
+    decreaseNum(item:Product) {
+      if (item.num > 1) {
+        item.num--
+      }
+    },
+    delItem(id: number) {
+      this.$emit('delete-item', id)  // 触发父组件删除
+    },
+    checkout() {
+      alert('成功结算 ' + this.selectedCount + ' 件商品\n总价：' + this.totalPrice.toFixed(2) + ' 元')
+    }
+  },
+  emits: ['delete-item']
 })
 </script>
 
@@ -28,58 +74,53 @@ export default defineComponent({
     </tr>
     </thead>
     <tbody>
-    <!-- 商品6 -->
-    <tr v-for="(item, index) in data" v-if="data.length > 0" :class="{'active':true}">
+    <tr v-for="item in data" :key="item.id" v-if="data.length > 0" :class="{'active':item.ischecked}">
       <td>
         <div class="checkbox-cell">
           <label>
-            <input type="checkbox">
+            <input type="checkbox" v-model="item.ischecked">
           </label>
-          <span class="item-id">{{ index + 1 }}</span>
+          <span class="item-id">{{ item.id }}</span>
         </div>
       </td>
-      <td><img class="image-placeholder" alt="商品图片" style="scale: 1.5;"></td>
-      <td class="price">{{ true }}</td>
+      <td><img class="image-placeholder" :src="item.icon" alt="商品图片" style="scale: 1.5;"></td>
+      <td class="price">{{ item.price }}</td>
       <td>
         <div class="quantity-control">
-          <button class="quantity-btn" aria-label="减少" >−</button>
-          <span class="quantity-number">{{ true }}</span>
-          <button class="quantity-btn" aria-label="增加">+</button>
+          <button class="quantity-btn" aria-label="减少" @click="decreaseNum(item)" :disabled="item.num <= 1">−</button>
+          <span class="quantity-number">{{ item.num }}</span>
+          <button class="quantity-btn" aria-label="增加" @click="increaseNum(item)">+</button>
         </div>
       </td>
-      <td class="subtotal">{{ true }}</td>
-      <td><button class="delete-btn">删除</button></td>
-<!--      <td><MyTag v-model="item.taag"></MyTag></td>-->
+      <td class="subtotal">{{ item.price * item.num }}</td>
+      <td><button class="delete-btn" @click="delItem(item.id)">删除</button></td>
+      <td><MyTag v-model="item.tag"></MyTag></td>  <!-- 修复拼写 -->
     </tr>
 
     <tr v-if="data.length === 0" style="text-align: center;">
-      <td >
-        💧空空如也
+      <td colspan="7">💧空空如也</td>
+    </tr>
+
+    <tr class="footer-row">
+      <td colspan="7" style="padding: 22px 8px 10px 8px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px;">
+          <div class="footer-checkbox">
+            <input type="checkbox" v-model="selectedAll" id="selectAllCheckbox">
+            <label for="selectAllCheckbox" style="font-weight: 500; color: #334155; cursor: pointer; font-size: 1rem;">全选</label>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
+            <div style="display: flex; align-items: baseline; gap: 8px;">
+              <span style="color: #475569; font-weight: 500;">总价：</span>
+              <span class="total-price" v-text="totalPrice.toFixed(2)"></span>
+            </div>
+            <button class="checkout-btn" @click="checkout()">
+              结算 <span class="checkout-note">({{ selectedCount }})</span>
+            </button>
+          </div>
+        </div>
       </td>
     </tr>
-<!--    &lt;!&ndash; 底部全选+结算行 &ndash;&gt;-->
-<!--    <tr class="footer-row">-->
-<!--      <td colspan="6" style="padding: 22px 8px 10px 8px;">-->
-<!--        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px;">-->
-<!--          &lt;!&ndash; 左侧全选 &ndash;&gt;-->
-<!--          <div class="footer-checkbox">-->
-<!--            <input type="checkbox" v-model="selectedAll" id="selectAllCheckbox">-->
-<!--            <label for="selectAllCheckbox" style="font-weight: 500; color: #334155; cursor: pointer; font-size: 1rem;">全选</label>-->
-<!--          </div>-->
-
-<!--          &lt;!&ndash; 右侧总价 + 结算 &ndash;&gt;-->
-<!--          <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">-->
-<!--            <div style="display: flex; align-items: baseline; gap: 8px;">-->
-<!--              <span style="color: #475569; font-weight: 500;">总价：</span>-->
-<!--              <span class="total-price" v-text="totalPrice.toFixed(2)"></span>-->
-<!--            </div>-->
-<!--            <button class="checkout-btn" @click="checkout()">-->
-<!--              结算 <span class="checkout-note">({{ selectedCount }})</span>-->
-<!--            </button>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </td>-->
-<!--    </tr>-->
     </tbody>
   </table>
 </template>

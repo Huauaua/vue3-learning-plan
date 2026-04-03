@@ -57,39 +57,9 @@ export default {
       fruitList: JSON.parse(localStorage.getItem('fruitList')) || defaultArr,
     }
   },
-  computed: {
-    selectedAll: {
-      get() {
-        return this.fruitList.every(item => item.ischecked)
-      },
-      set(value) {
-        this.fruitList.forEach(item => item.ischecked = value)
-      }
-    },
-    selectedCount() {
-      return this.fruitList.reduce((count, item) => item.ischecked === true ? count + item.num : count, 0)
-    },
-    totalPrice() {
-      return this.fruitList.reduce((total, item) => {
-        return item.ischecked ? total + item.price * item.num : total
-      }, 0)
-    }
-  }
-  ,
   methods: {
-    increaseNum(item) {
-      item.num++
-    },
-    decreaseNum(item) {
-      if (item.num > 1) {
-        item.num--
-      }
-    },
     delItem(id) {
       this.fruitList = this.fruitList.filter(item => item.id !== id)
-    },
-    checkout() {
-      alert('成功结算 ' + this.selectedCount + ' 件商品' + ' \n总价：' + this.totalPrice.toFixed(2) + ' 元')
     }
   },
   watch: {
@@ -102,8 +72,6 @@ export default {
   }
 }
 </script>
-
-
 <template>
   <!-- 独立横幅，优雅置顶，与下方卡片同宽 -->
   <div class="banner-container">
@@ -113,7 +81,7 @@ export default {
     </div>
   </div>
 
-  <MyTable :data="fruitList"></MyTable>
+  <MyTable :data="fruitList" @delete-item="delItem"></MyTable>
 </template>
 
 <style scoped>
