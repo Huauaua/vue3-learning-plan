@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import MyTag from "./MyTag.vue";
-// 定义商品类型
+
 interface Product {
   id: number
   name: string
@@ -11,6 +11,7 @@ interface Product {
   price: number
   tag: string
 }
+
 export default defineComponent({
   name: "MyTable",
   components: { MyTag },
@@ -18,6 +19,10 @@ export default defineComponent({
     data: {
       type: Array as () => Product[],
       required: true,
+    },
+    columnCount: {
+      type: Number,
+      default: 8
     }
   },
   computed: {
@@ -41,19 +46,19 @@ export default defineComponent({
     }
   },
   methods: {
-    increaseNum(item:Product) {
+    increaseNum(item: Product) {
       item.num++
     },
-    decreaseNum(item:Product) {
+    decreaseNum(item: Product) {
       if (item.num > 1) {
         item.num--
       }
     },
     delItem(id: number) {
-      this.$emit('delete-item', id)  // 触发父组件删除
+      this.$emit('delete-item', id)
     },
     checkout() {
-      alert('成功结算 ' + this.selectedCount + ' 件商品\n总价：' + this.totalPrice.toFixed(2) + ' 元')
+      alert('成功结算 ' + this.selectedCount + ' 件商品\n总价：¥' + this.totalPrice.toFixed(2))
     }
   },
   emits: ['delete-item']
@@ -61,258 +66,204 @@ export default defineComponent({
 </script>
 
 <template>
-  <table class="table">
-    <thead>
-    <tr>
-      <th>选中</th>
-      <th>图片</th>
-      <th>单价</th>
-      <th>个数</th>
-      <th>小计</th>
-      <th>操作</th>
-      <th>标签</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr v-for="item in data" :key="item.id" v-if="data.length > 0" :class="{'active':item.ischecked}">
-      <td>
-        <div class="checkbox-cell">
-          <label>
-            <input type="checkbox" v-model="item.ischecked">
-          </label>
-          <span class="item-id">{{ item.id }}</span>
-        </div>
-      </td>
-      <td><img class="image-placeholder" :src="item.icon" alt="商品图片" style="scale: 1.5;"></td>
-      <td class="price">{{ item.price }}</td>
-      <td>
-        <div class="quantity-control">
-          <button class="quantity-btn" aria-label="减少" @click="decreaseNum(item)" :disabled="item.num <= 1">−</button>
-          <span class="quantity-number">{{ item.num }}</span>
-          <button class="quantity-btn" aria-label="增加" @click="increaseNum(item)">+</button>
-        </div>
-      </td>
-      <td class="subtotal">{{ item.price * item.num }}</td>
-      <td><button class="delete-btn" @click="delItem(item.id)">删除</button></td>
-      <td><MyTag v-model="item.tag"></MyTag></td>  <!-- 修复拼写 -->
-    </tr>
+  <div class="table-wrapper">
+    <table class="shopping-table">
+      <thead>
+      <tr class="table-header">
+        <slot name="head"></slot>
+      </tr>
+      </thead>
+      <tbody>
+      <template v-if="data.length > 0">
+        <tr v-for="item in data" :key="item.id" class="table-row" :class="{'row-selected': item.ischecked}">
+          <slot name="body" :item="item"></slot>
+        </tr>
+      </template>
 
-    <tr v-if="data.length === 0" style="text-align: center;">
-      <td colspan="7">💧空空如也</td>
-    </tr>
-
-    <tr class="footer-row">
-      <td colspan="7" style="padding: 22px 8px 10px 8px;">
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 18px;">
-          <div class="footer-checkbox">
-            <input type="checkbox" v-model="selectedAll" id="selectAllCheckbox">
-            <label for="selectAllCheckbox" style="font-weight: 500; color: #334155; cursor: pointer; font-size: 1rem;">全选</label>
+      <tr v-else class="empty-row">
+        <td :colspan="columnCount">
+          <div class="empty-state">
+            <span class="empty-icon">🛒</span>
+            <p>购物车空空如也</p>
+            <button class="empty-btn">去逛逛</button>
           </div>
+        </td>
+      </tr>
 
-          <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
-            <div style="display: flex; align-items: baseline; gap: 8px;">
-              <span style="color: #475569; font-weight: 500;">总价：</span>
-              <span class="total-price" v-text="totalPrice.toFixed(2)"></span>
+      <tr class="footer-row" v-if="data.length > 0">
+        <td :colspan="columnCount">
+          <div class="footer-bar">
+            <div class="footer-left">
+              <label class="select-all">
+                <input type="checkbox" v-model="selectedAll">
+                <span>全选</span>
+              </label>
             </div>
-            <button class="checkout-btn" @click="checkout()">
-              结算 <span class="checkout-note">({{ selectedCount }})</span>
-            </button>
+
+            <div class="footer-right">
+              <div class="total-info">
+                <span class="total-label">合计：</span>
+                <span class="total-price">¥{{ totalPrice.toFixed(2) }}</span>
+                <span class="total-count">(已选{{ selectedCount }}件)</span>
+              </div>
+              <button class="checkout-btn" @click="checkout">
+                去结算
+              </button>
+            </div>
           </div>
-        </div>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <style scoped>
-/* 表格区域 */
-table {
-  border-collapse: collapse;
+/* 继承父组件的 CSS 变量 */
+.table-wrapper {
   width: 100%;
-  font-size: 15px;
-  color: #1e293b;
+  overflow-x: auto;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
 }
-th {
+
+.shopping-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-base);
+  min-width: var(--table-min-width);
+}
+
+/* 表头样式 */
+.table-header {
+  background: #f8f9fc;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table-header th {
+  padding: var(--spacing-md) var(--spacing-md);
   text-align: left;
-  padding: 0 8px 14px 8px;
-  font-weight: 500;
-  color: #64748b;
-  border-bottom: 1px solid #e2e8f0;
-  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.3px;
 }
-td {
-  padding: 16px 8px;
-  border-bottom: 1px solid #edf2f7;
+
+/* 表格行样式 */
+.table-row {
+  border-bottom: 1px solid var(--color-border);
+  transition: all var(--transition-fast);
+}
+
+.table-row:hover {
+  background-color: var(--color-bg-hover);
+}
+
+.row-selected {
+  background-color: var(--color-bg-selected);
+}
+
+.table-row td {
+  padding: var(--spacing-md) var(--spacing-md);
   vertical-align: middle;
 }
-/* 最后一行 (底部全选行) 不要底部边框，但保留上部边框已经在footer-row定义 */
-tr.footer-row td {
-  border-bottom: none;
-  padding-top: 22px;
-  padding-bottom: 8px;
+
+/* 空状态样式 */
+.empty-row td {
+  padding: 60px var(--spacing-lg);
 }
 
-/* 选中列 (复选框 + 文本) */
-.checkbox-cell {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.checkbox-cell input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  accent-color: #3b82f6;
-  margin: 0;
-  cursor: pointer;
-}
-.item-id {
-  font-weight: 500;
-  color: #0f172a;
-}
-
-/* 图片占位 */
-.image-placeholder {
-  width: 44px;
-  height: 44px;
-  background: #f1f5f9;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
-  font-size: 12px;
-  font-weight: 500;
-  border: 1px solid #e2e8f0;
-}
-
-.price {
-  font-weight: 500;
-  color: #334155;
-}
-
-/* 个数控制 */
-.quantity-control {
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid #e2e8f0;
-  border-radius: 40px;
-  background: white;
-}
-.quantity-btn {
-  width: 32px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: #475569;
-  background: none;
-  border: none;
-  cursor: pointer;
-  border-radius: 40px;
-  transition: all 0.1s;
-}
-.quantity-btn:hover {
-  background-color: #f1f5f9;
-  color: #0f172a;
-}
-.quantity-number {
-  min-width: 34px;
+.empty-state {
   text-align: center;
-  font-weight: 500;
-  color: #1e293b;
-  font-size: 16px;
 }
 
-.subtotal {
-  font-weight: 600;
-  color: #0f172a;
+.empty-icon {
+  font-size: 64px;
+  display: block;
+  margin-bottom: var(--spacing-md);
+  opacity: 0.5;
 }
 
-/* 删除按钮 */
-.delete-btn {
-  background: none;
-  border: 1px solid #f1f5f9;
-  color: #94a3b8;
-  font-size: 13px;
-  padding: 6px 16px;
-  border-radius: 40px;
-  cursor: pointer;
-  transition: all 0.15s;
-  font-weight: 500;
-  background-color: #ffffff;
-}
-.delete-btn:hover {
-  background-color: #fee2e2;
-  border-color: #fecaca;
-  color: #b91c1c;
+.empty-state p {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
 }
 
-/* 底部全选/结算栏 */
+/* 底部栏样式 */
 .footer-row td {
-  border-top: 2px solid #f0f4fa;  /* 更明显的分割 */
+  padding: 0;
+  background: var(--color-bg-card);
+  border-top: 1px solid var(--color-border);
 }
-.footer-checkbox {
+
+.footer-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  background: #fafbfc;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
 }
-.footer-checkbox input {
+
+.select-all {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+}
+
+.select-all input {
   width: 18px;
   height: 18px;
-  accent-color: #3b82f6;
-}
-.total-price {
-  font-weight: 650;
-  font-size: 1.4rem;
-  color: #0f172a;
-}
-.total-price::before {
-  content: '¥ ';
-  font-weight: 500;
-  font-size: 1.1rem;
-  color: #475569;
-}
-.checkout-btn {
-  background-color: #3b82f6;
-  color: white;
-  font-weight: 600;
-  font-size: 1rem;
-  padding: 12px 34px;
-  border-radius: 48px;
   cursor: pointer;
-  letter-spacing: 0;
-  box-shadow: 0 8px 18px rgba(59,130,246,0.25);
-  transition: 0.15s;
-  border: 1px solid transparent;
+  accent-color: var(--color-primary);
+}
+
+.footer-right {
   display: flex;
   align-items: center;
+  gap: var(--spacing-xl);
 }
-.checkout-btn:hover {
-  background-color: #2563eb;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 22px rgba(59,130,246,0.3);
+
+.total-info {
+  text-align: right;
 }
-.checkout-note {
-  background: rgba(255,255,255,0.2);
-  border-radius: 40px;
-  padding: 4px 14px;
-  font-size: 0.9rem;
+
+.total-label {
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+}
+
+.total-price {
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-left: var(--spacing-sm);
+}
+
+.total-count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-left: var(--spacing-sm);
+}
+
+.checkout-btn {
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  border: none;
+  border-radius: var(--radius-full);
   color: white;
-  margin-left: 10px;
-  border: 1px solid rgba(255,255,255,0.3);
-  font-weight: 500;
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
 }
 
-/* 响应式 */
-@media (max-width: 700px) {
-  .cart-card, .banner-container { width: 95%; }
-  table { min-width: 100%; }
-  .checkout-btn { padding: 10px 22px; }
-}
-
-.active{
-  background-color: #f1f5f9;
+.checkout-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
 }
 </style>
