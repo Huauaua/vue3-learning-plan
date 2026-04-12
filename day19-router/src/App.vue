@@ -30,7 +30,7 @@ export default {
         { name: '竞赛', path: '/competitions', icon: '🏆' },
         { name: '组队', path: '/team', icon: '👥' },
         { name: '资讯', path: '/about', icon: '📰' },
-        { name: '个人中心', path: '/profile', icon: '👤' }
+        { name: '个人中心', path: '/profile/小明', icon: '👤' }
       ]
     }
   },
