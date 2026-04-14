@@ -7,9 +7,11 @@ import Profile from '@/views/Profile.vue'
 
 // ✅ Vue Router 4 的正确导入方式
 import { createRouter, createWebHistory } from 'vue-router'
+import Notfind from "@/views/Notfind.vue";
 
 // ✅ 创建路由配置（不需要 Vue.use()）
 const router = createRouter({
+    mode: 'hash',
     history: createWebHistory(),  // HTML5 模式
     routes: [
         { path: '/', name: 'Home', component: Home },
@@ -18,7 +20,7 @@ const router = createRouter({
         { path: '/team', name: 'Team', component: Team },
         { path: '/profile', name: 'Profile', component: Profile },
         // 404 重定向
-        { path: '/:pathMatch(.*)*', redirect: '/' }
+        { path: '/:pathMatch(.*)*', component: Notfind}
     ]
 })
 
