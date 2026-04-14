@@ -17,8 +17,8 @@ export default defineComponent({
     handleClick() {
       // 带着输入框的值跳转
       this.router.push({
-        path: '/profile',
-        query: { name: this.inputValue }
+        path: `/profile/${this.inputValue}`,
+        // query: { name: this.inputValue }
       })
     }
   }

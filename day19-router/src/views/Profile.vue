@@ -14,7 +14,8 @@ export default defineComponent({
   <h1>
     Profile
   </h1>
-  <div>{{ route.query.name}}</div>
+<!--  <div>{{ route.query.name}}</div>-->
+  <div>{{ route.params.name}}</div>
 </template>
 
 <style scoped>

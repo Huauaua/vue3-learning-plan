@@ -55,10 +55,11 @@ export default {
     menuItems: {
       type: Array,
       default: () => [
-        { name: '首页', path: '/' },
-        { name: '关于', path: '/about' },
-        { name: '服务', path: '/services' },
-        { name: '联系', path: '/contact' }
+        { name: '首页', path: '/', icon: '🏠' },
+        { name: '竞赛', path: '/competitions', icon: '🏆' },
+        { name: '组队', path: '/team', icon: '👥' },
+        { name: '资讯', path: '/about', icon: '📰' },
+        { name: '个人中心', path: '/profile', icon: '👤' }
       ]
     },
     // 是否显示登录/退出按钮

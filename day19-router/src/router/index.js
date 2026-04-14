@@ -18,7 +18,7 @@ const router = createRouter({
         { path: '/about', name: 'About', component: About },
         { path: '/competitions', name: 'Competitions', component: Competitions },
         { path: '/team', name: 'Team', component: Team },
-        { path: '/profile', name: 'Profile', component: Profile },
+        { path: '/profile/:name?', name: 'Profile', component: Profile },
         // 404 重定向
         { path: '/:pathMatch(.*)*', component: Notfind}
     ]
