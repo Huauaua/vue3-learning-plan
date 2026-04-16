@@ -1,7 +1,21 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
+<script>
+  export default {
+    name:"h5-wrapper",
+  }
 </script>
 
 <template>
-  <HelloWorld />
+  <div class="h5-wrapper">
+    <router-view></router-view>
+  </div>
 </template>
+<style scoped>
+.h5-wrapper{
+  max-width: 750px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background-color: #ffffff;
+  color: #000000;
+  font-family: Arial, sans-serif;
+}
+</style>
