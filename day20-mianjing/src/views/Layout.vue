@@ -43,7 +43,7 @@ export default defineComponent({
   height: 60px;
   background-color: #000000;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
   border-top: 1px solid #ffffff;
 }
@@ -52,8 +52,11 @@ export default defineComponent({
   color: #ffffff;
   text-decoration: none;
   font-size: 14px;
-  padding: 10px 15px;
-  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tab-item:hover {
@@ -61,7 +64,12 @@ export default defineComponent({
 }
 
 .tab-item.router-link-active {
-  background-color: #ffffff;
+  background-color: orange;
+  color: #000000;
+  font-weight: bold;
+}
+.tab-item.router-link-active:hover {
+  background-color: #ffc125;
   color: #000000;
   font-weight: bold;
 }

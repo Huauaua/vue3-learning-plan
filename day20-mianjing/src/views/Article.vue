@@ -1,8 +1,19 @@
 <script lang="ts">
+import axios from 'axios'
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-  name: "Article"
+  name: "Article",
+  data() {
+    return {
+      articles: []
+    }
+  },
+  async created() {
+    const res = await axios.get('https://mock.boxuegu.com/mock/3083/articles')
+    this.articles = res.data.articles
+    console.log(res.data.articles)
+  }
 })
 </script>
 
@@ -10,10 +21,10 @@ export default defineComponent({
   <div class="article-page">
     <h1 class="page-title">面经列表</h1>
     <div class="article-list">
-      <div class="article-item" v-for="i in 5" :key="i">
-        <h3>面试题目 {{ i }}</h3>
-        <p>这是第 {{ i }} 个面试题目的简要描述...</p>
-        <router-link :to="`/article/${i}`" class="detail-link">查看详情</router-link>
+      <div class="article-item" v-for="article in articles" :key="article.id">
+        <h3>{{ article.title }}</h3>
+        <p>{{ article.description }}</p>
+        <router-link :to="`/article/${article.id}`" class="detail-link">查看详情</router-link>
       </div>
     </div>
   </div>
