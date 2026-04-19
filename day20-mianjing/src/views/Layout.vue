@@ -1,15 +1,27 @@
 <script lang="ts">
+import {useRoute} from 'vue-router'
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-  name: "LayoutPage"
+  name: "LayoutPage",
+  setup() {
+    const route = useRoute()
+    return {route}
+  },
+  data() {
+    return {}
+  },
 })
 </script>
 
 <template>
   <div class="layout-container">
     <div class="content">
-      <router-view></router-view>
+      <router-view v-slot="{ Component }">
+        <keep-alive :include="['Article', 'Collect', 'Like', 'User']">
+          <component :is="Component" :key="route.fullPath" />
+        </keep-alive>
+      </router-view>
     </div>
     <nav class="tabbar">
       <router-link to="/article" class="tab-item">面经</router-link>

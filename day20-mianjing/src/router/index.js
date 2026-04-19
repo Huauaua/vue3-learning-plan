@@ -17,10 +17,6 @@ const routes = [
         component: Article
       },
       {
-        path: 'article/:id',
-        component: ArticleDetail
-      },
-      {
         path: 'collect',
         component: Collect
       },
@@ -33,6 +29,10 @@ const routes = [
         component: User
       }
     ]
+  },
+  {
+    path: '/article/:id',
+    component: ArticleDetail
   }
 ]
 

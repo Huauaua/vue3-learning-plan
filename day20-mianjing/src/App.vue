@@ -1,12 +1,17 @@
 <script>
   export default {
     name:"h5-wrapper",
+    data() {
+      return {
+
+      }
+    }
   }
 </script>
 
 <template>
   <div class="h5-wrapper">
-    <router-view></router-view>
+      <router-view></router-view>
   </div>
 </template>
 <style scoped>

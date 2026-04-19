@@ -1,60 +1,25 @@
 <script lang="ts">
 import {defineComponent} from 'vue'
+import { articles } from '@/data/articles'
 
 export default defineComponent({
   name: "Article",
   data() {
     return {
-      articles: [
-        {
-          id: 1,
-          title: 'Vue 3 响应式原理',
-          description: '请详细解释 Vue 3 的响应式系统是如何工作的，包括 Proxy 的使用...',
-          author: '张三',
-          date: '2024-01-15',
-          likes: 128,
-          views: 1024
-        },
-        {
-          id: 2,
-          title: 'React 与 Vue 的区别',
-          description: '对比 React 和 Vue 框架的设计理念和实际应用场景...',
-          author: '李四',
-          date: '2024-01-20',
-          likes: 256,
-          views: 2048
-        },
-        {
-          id: 3,
-          title: 'JavaScript 闭包详解',
-          description: '什么是闭包？闭包的应用场景有哪些？如何避免内存泄漏？...',
-          author: '王五',
-          date: '2024-02-01',
-          likes: 89,
-          views: 756
-        },
-        {
-          id: 4,
-          title: '前端性能优化方案',
-          description: '列举常见的前端性能优化手段，并说明其原理和效果...',
-          author: '赵六',
-          date: '2024-02-10',
-          likes: 342,
-          views: 3200
-        },
-        {
-          id: 5,
-          title: 'Webpack 打包优化',
-          description: '如何优化 Webpack 的打包速度和打包体积？有哪些配置技巧？...',
-          author: '钱七',
-          date: '2024-02-15',
-          likes: 167,
-          views: 1500
-        }
-      ]
+      articles: articles
     }
+  },
+  activated() {
+    console.log('✅ Article 页面被激活（从缓存恢复）')
+  },
+  deactivated() {
+    console.log('💾 Article 页面被停用（进入缓存）')
+  },
+  created() {
+    console.log('🆕 Article 页面被创建（首次加载）')
   }
 })
+
 </script>
 
 <template>
