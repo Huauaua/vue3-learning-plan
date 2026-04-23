@@ -1,10 +1,19 @@
+<script>
+import {defineComponent} from "vue";
+import Son1 from "@/components/son1.vue";
+import Son2 from "@/components/son2.vue";
+
+export default defineComponent({
+  components: {Son2, Son1}
+})
+
+
+</script>
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
+    father
+    <son1></son1>
+    <son2></son2>
   </div>
 </template>
 
